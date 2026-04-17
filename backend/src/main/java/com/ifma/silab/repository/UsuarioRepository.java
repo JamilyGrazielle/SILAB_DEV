@@ -1,6 +1,6 @@
-package repository;
+package com.ifma.silab.repository;
 
-import model.Usuario;
+import com.ifma.silab.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

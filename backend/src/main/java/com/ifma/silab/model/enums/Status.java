@@ -1,4 +1,4 @@
-package model.enums;
+package com.ifma.silab.model.enums;
 
 public enum Status {
     ATIVO,

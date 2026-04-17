@@ -1,11 +1,11 @@
-package model;
+package com.ifma.silab.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import model.enums.Perfil;
-import model.enums.Status;
+import com.ifma.silab.model.enums.Perfil;
+import com.ifma.silab.model.enums.Status;
 
 @Data
 @AllArgsConstructor

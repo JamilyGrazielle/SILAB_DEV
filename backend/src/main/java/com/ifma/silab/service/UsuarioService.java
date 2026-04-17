@@ -1,9 +1,9 @@
-package service;
+package com.ifma.silab.service;
 
-import model.Usuario;
+import com.ifma.silab.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import repository.UsuarioRepository;
+import com.ifma.silab.repository.UsuarioRepository;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository repository;
 
-    public List<Usuario> findAll() {
+    public List<Usuario> listarTodos() {
         return repository.findAll();
     }
 }
