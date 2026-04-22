@@ -1,6 +1,6 @@
 package com.ifma.silab.controller;
 
-import com.ifma.silab.model.Usuario;
+import com.ifma.silab.dto.UsuarioResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +18,8 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<Usuario>> listar() {
-        List<Usuario> usuarios = usuarioService.listarTodos();
+    public ResponseEntity<List<UsuarioResponseDTO>> listar() {
+        List<UsuarioResponseDTO> usuarios = usuarioService.listarTodos();
         return ResponseEntity.ok(usuarios);
     }
 }

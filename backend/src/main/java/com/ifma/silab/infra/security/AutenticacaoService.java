@@ -26,7 +26,6 @@ public class AutenticacaoService implements UserDetailsService {
                 .username(usuario.getMatricula())
                 .password(usuario.getSenha())
                 .roles(usuario.getPerfil().name())
-                .disabled(usuario.getStatus() == Status.PENDENTE)
                 .accountLocked(usuario.getStatus() == Status.INATIVO)
                 .build();
     }

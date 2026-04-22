@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,6 +28,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/api/login").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/api/cadastro").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/api/agenda").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/api/solicitacoes/**").hasAnyRole("ADMIN", "ROOT");
                     req.requestMatchers("/error").permitAll();
                     req.anyRequest().authenticated();
                 })
