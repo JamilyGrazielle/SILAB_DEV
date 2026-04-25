@@ -1,6 +1,6 @@
 package com.ifma.silab.model.enums;
 
-public enum Status {
+public enum StatusUsuario {
     ATIVO,
     INATIVO
 }

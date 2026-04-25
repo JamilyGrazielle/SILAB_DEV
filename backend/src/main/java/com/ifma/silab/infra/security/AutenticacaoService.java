@@ -1,7 +1,7 @@
 package com.ifma.silab.infra.security;
 
 import com.ifma.silab.model.Usuario;
-import com.ifma.silab.model.enums.Status;
+import com.ifma.silab.model.enums.StatusUsuario;
 import com.ifma.silab.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -26,7 +26,7 @@ public class AutenticacaoService implements UserDetailsService {
                 .username(usuario.getMatricula())
                 .password(usuario.getSenha())
                 .roles(usuario.getPerfil().name())
-                .accountLocked(usuario.getStatus() == Status.INATIVO)
+                .accountLocked(usuario.getStatus() == StatusUsuario.INATIVO)
                 .build();
     }
 }

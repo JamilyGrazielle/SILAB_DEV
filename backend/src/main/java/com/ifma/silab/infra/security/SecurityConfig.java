@@ -29,7 +29,25 @@ public class SecurityConfig {
                     req.requestMatchers(HttpMethod.POST, "/api/login").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/api/cadastro").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/api/agenda").permitAll();
+
+                    req.requestMatchers(HttpMethod.PATCH, "/api/usuarios/*/status").hasAnyRole("ADMIN", "ROOT");
+                    req.requestMatchers(HttpMethod.GET, "/api/usuarios").hasAnyRole("ADMIN", "ROOT");
+
                     req.requestMatchers(HttpMethod.GET, "/api/solicitacoes/**").hasAnyRole("ADMIN", "ROOT");
+                    req.requestMatchers(HttpMethod.PATCH, "/api/solicitacoes/**").hasAnyRole("ADMIN", "ROOT");
+
+                    req.requestMatchers(HttpMethod.GET, "/api/laboratorios/**").hasAnyRole("ADMIN", "ROOT", "PROFESSOR");
+                    req.requestMatchers(HttpMethod.POST, "/api/laboratorios/**").hasAnyRole("ADMIN", "ROOT");
+                    req.requestMatchers(HttpMethod.PUT, "/api/laboratorios/**").hasAnyRole("ADMIN", "ROOT");
+                    req.requestMatchers(HttpMethod.PATCH, "/api/laboratorios/**").hasAnyRole("ADMIN", "ROOT");
+                    req.requestMatchers(HttpMethod.DELETE, "/api/laboratorios/**").hasAnyRole("ADMIN", "ROOT");
+
+                    req.requestMatchers(HttpMethod.GET, "/api/reservas").hasAnyRole("ADMIN", "ROOT");
+                    req.requestMatchers(HttpMethod.GET, "/api/reservas/minhas").hasRole("PROFESSOR");
+                    req.requestMatchers(HttpMethod.POST, "/api/reservas").hasRole("PROFESSOR");
+                    req.requestMatchers(HttpMethod.PATCH, "/api/reservas/*/cancelar").hasAnyRole("PROFESSOR", "ADMIN", "ROOT");
+
+
                     req.requestMatchers("/error").permitAll();
                     req.anyRequest().authenticated();
                 })

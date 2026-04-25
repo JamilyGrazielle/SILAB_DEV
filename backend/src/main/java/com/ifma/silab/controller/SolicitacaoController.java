@@ -1,6 +1,6 @@
 package com.ifma.silab.controller;
 
-import com.ifma.silab.dto.SolicitacaoResponseDTO;
+import com.ifma.silab.dto.solicitacao.SolicitacaoResponseDTO;
 import com.ifma.silab.service.SolicitacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
 package com.ifma.silab.controller;
 
-import com.ifma.silab.dto.CadastroDTO;
+import com.ifma.silab.dto.auth.CadastroDTO;
 import com.ifma.silab.service.SolicitacaoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

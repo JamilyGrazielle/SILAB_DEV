@@ -1,10 +1,10 @@
 package com.ifma.silab.service;
 
-import com.ifma.silab.dto.CadastroDTO;
-import com.ifma.silab.dto.SolicitacaoResponseDTO;
+import com.ifma.silab.dto.auth.CadastroDTO;
+import com.ifma.silab.dto.solicitacao.SolicitacaoResponseDTO;
 import com.ifma.silab.model.SolicitacaoCadastro;
 import com.ifma.silab.model.Usuario;
-import com.ifma.silab.model.enums.Status;
+import com.ifma.silab.model.enums.StatusUsuario;
 import com.ifma.silab.model.enums.StatusSolicitacao;
 import com.ifma.silab.repository.SolicitacaoCadastroRepository;
 import com.ifma.silab.repository.UsuarioRepository;
@@ -95,7 +95,7 @@ public class SolicitacaoService {
         novoUsuario.setEmail(solicitacao.getEmail());
         novoUsuario.setSenha(solicitacao.getSenha());
         novoUsuario.setPerfil(solicitacao.getPerfil());
-        novoUsuario.setStatus(Status.ATIVO);
+        novoUsuario.setStatus(StatusUsuario.ATIVO);
 
         usuarioRepository.save(novoUsuario);
 

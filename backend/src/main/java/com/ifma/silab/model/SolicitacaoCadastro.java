@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "solicitacoes")
+@Table(name = "solicitacao")
 public class SolicitacaoCadastro {
 
     @Id
@@ -41,9 +41,10 @@ public class SolicitacaoCadastro {
     @Column(nullable = false)
     private Perfil perfil = Perfil.PROFESSOR;
 
-    @Column(nullable = false)
+    @Column(name = "data_solicitacao", nullable = false)
     private LocalDateTime dataSolicitacao = LocalDateTime.now();
 
+    @Column(name = "data_resposta")
     private LocalDateTime dataResposta;
 
 }

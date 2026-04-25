@@ -1,11 +1,12 @@
 package com.ifma.silab.controller;
 
-import com.ifma.silab.dto.UsuarioResponseDTO;
+import com.ifma.silab.dto.usuario.StatusUsuarioDTO;
+import com.ifma.silab.dto.usuario.UsuarioResponseDTO;
+import com.ifma.silab.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 import com.ifma.silab.service.UsuarioService;
 
 import java.util.List;
@@ -18,8 +19,16 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<UsuarioResponseDTO>> listar() {
-        List<UsuarioResponseDTO> usuarios = usuarioService.listarTodos();
+    public ResponseEntity<List<UsuarioResponseDTO>> listar(@AuthenticationPrincipal Usuario solicitante) {
+        List<UsuarioResponseDTO> usuarios = usuarioService.listarTodos(solicitante);
         return ResponseEntity.ok(usuarios);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<String> alterarStatus(@PathVariable Long id,
+                                              @RequestBody StatusUsuarioDTO dto,
+                                              @AuthenticationPrincipal Usuario solicitante) {
+        usuarioService.mudarStatus(id, dto.status(), solicitante);
+        return ResponseEntity.ok("Status atualizado com sucesso!");
     }
 }

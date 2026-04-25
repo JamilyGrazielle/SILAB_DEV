@@ -1,4 +1,4 @@
-package com.ifma.silab.dto;
+package com.ifma.silab.dto.solicitacao;
 
 import com.ifma.silab.model.enums.StatusSolicitacao;
 
