@@ -1,5 +1,7 @@
 package com.ifma.silab.service;
 
+import com.ifma.silab.dto.reserva.AgendaResponseDTO;
+import com.ifma.silab.dto.reserva.ReservaAgendaDTO;
 import com.ifma.silab.dto.reserva.ReservaCadastroDTO;
 import com.ifma.silab.dto.reserva.ReservaResponseDTO;
 import com.ifma.silab.model.Laboratorio;
@@ -13,6 +15,8 @@ import com.ifma.silab.repository.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,6 +38,7 @@ public class ReservaService {
                         r.getData(),
                         r.getHoraInicio(),
                         r.getHoraFim(),
+                        r.getMotivo(),
                         r.getStatus(),
                         r.getDataSolicitacao()))
                 .toList();
@@ -49,6 +54,7 @@ public class ReservaService {
                         r.getData(),
                         r.getHoraInicio(),
                         r.getHoraFim(),
+                        r.getMotivo(),
                         r.getStatus(),
                         r.getDataSolicitacao()))
                 .toList();
@@ -61,6 +67,18 @@ public class ReservaService {
             throw new RuntimeException("O laboratório está em manutenção.");
         }
 
+        if (dto.getHoraFim().isBefore(dto.getHoraInicio())) {
+            throw new RuntimeException("Hora final da reserva não pode ser anterior à hora inicial.");
+        }
+
+        if (dto.isRecorrente()) {
+            criarReservasRecorrentes(professor, laboratorio, dto);
+        } else {
+            criarUmaReserva(professor, laboratorio, dto);
+        }
+    }
+
+    private void criarUmaReserva(Usuario professor, Laboratorio laboratorio, ReservaCadastroDTO dto) {
         boolean conflito = reservaRepository.existsConflito(
                 dto.getLaboratorioId(),
                 dto.getData(),
@@ -72,19 +90,43 @@ public class ReservaService {
             throw new RuntimeException("Laboratório já reservado neste horário.");
         }
 
-        if (dto.getHoraFim().isBefore(dto.getHoraInicio())) {
-            throw new RuntimeException("Hora final da reserva não pode ser anterior à hora inicial.");
-        }
-
         Reserva reserva = new Reserva();
         reserva.setProfessor(professor);
         reserva.setLaboratorio(laboratorio);
         reserva.setData(dto.getData());
         reserva.setHoraInicio(dto.getHoraInicio());
         reserva.setHoraFim(dto.getHoraFim());
+        reserva.setMotivo(dto.getMotivo());
         reserva.setStatus(StatusReserva.CONFIRMADA);
 
         reservaRepository.save(reserva);
+    }
+
+    private void criarReservasRecorrentes(Usuario professor, Laboratorio laboratorio, ReservaCadastroDTO dto) {
+        List<Reserva> reservas = new ArrayList<>();
+        LocalDate dataAtual = dto.getData();
+
+        while (!dataAtual.isAfter(dto.getDataFimRecorrencia())) {
+
+            boolean conflito = reservaRepository.existsConflito(dto.getLaboratorioId(), dto.getData(), dto.getHoraInicio(), dto.getHoraFim());
+
+            if (conflito) {
+                continue;
+            }
+
+            Reserva reserva = new Reserva();
+            reserva.setProfessor(professor);
+            reserva.setLaboratorio(laboratorio);
+            reserva.setData(dataAtual);
+            reserva.setHoraInicio(dto.getHoraInicio());
+            reserva.setHoraFim(dto.getHoraFim());
+            reserva.setMotivo(dto.getMotivo());
+            reserva.setStatus(StatusReserva.CONFIRMADA);
+            reservas.add(reserva);
+
+            dataAtual = dataAtual.plusDays(7);
+        }
+        reservaRepository.saveAll(reservas);
     }
 
     public void cancelarReserva(Long reservaId, Usuario usuario) {
@@ -102,8 +144,29 @@ public class ReservaService {
             throw new RuntimeException("Reserva já cancelada");
         }
 
+        if (reserva.getStatus() == StatusReserva.CONCLUIDA) {
+            throw new RuntimeException("Reserva já concluida, não pode ser cancelada");
+        }
+
         reserva.setStatus(StatusReserva.CANCELADA);
         reservaRepository.save(reserva);
+    }
+
+    public AgendaResponseDTO consultarAgenda(Long laboratorioId, LocalDate semana) {
+        LocalDate fimSemana = semana.plusDays(6);
+
+        List<Reserva> reservas = reservaRepository.findByLaboratorioIdAndDataBetweenAndStatus(laboratorioId, semana, fimSemana, StatusReserva.CONFIRMADA);
+
+        List<ReservaAgendaDTO> reservasAgenda = reservas.stream()
+                .map(r -> new ReservaAgendaDTO(
+                        r.getData(),
+                        r.getHoraInicio(),
+                        r.getHoraFim(),
+                        r.getProfessor().getNome(),
+                        r.getLaboratorio().getNome(),
+                        r.getMotivo()
+                )).toList();
+        return new AgendaResponseDTO(semana, fimSemana, reservasAgenda);
     }
 
 }

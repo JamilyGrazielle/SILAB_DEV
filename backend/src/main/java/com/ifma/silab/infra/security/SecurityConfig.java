@@ -32,6 +32,7 @@ public class SecurityConfig {
 
                     req.requestMatchers(HttpMethod.PATCH, "/api/usuarios/*/status").hasAnyRole("ADMIN", "ROOT");
                     req.requestMatchers(HttpMethod.GET, "/api/usuarios").hasAnyRole("ADMIN", "ROOT");
+                    req.requestMatchers(HttpMethod.POST, "/api/usuarios").hasAnyRole("ADMIN", "ROOT");
 
                     req.requestMatchers(HttpMethod.GET, "/api/solicitacoes/**").hasAnyRole("ADMIN", "ROOT");
                     req.requestMatchers(HttpMethod.PATCH, "/api/solicitacoes/**").hasAnyRole("ADMIN", "ROOT");
@@ -47,6 +48,7 @@ public class SecurityConfig {
                     req.requestMatchers(HttpMethod.POST, "/api/reservas").hasRole("PROFESSOR");
                     req.requestMatchers(HttpMethod.PATCH, "/api/reservas/*/cancelar").hasAnyRole("PROFESSOR", "ADMIN", "ROOT");
 
+                    req.requestMatchers("/api/bloqueios/**").hasAnyRole("ADMIN", "ROOT");
 
                     req.requestMatchers("/error").permitAll();
                     req.anyRequest().authenticated();

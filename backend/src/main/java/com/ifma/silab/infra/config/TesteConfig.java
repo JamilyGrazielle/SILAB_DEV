@@ -78,11 +78,11 @@ public class TesteConfig implements CommandLineRunner {
         Laboratorio l1 = new Laboratorio(null, "Laboratorio 1", 30, StatusLaboratorio.DISPONIVEL, new ArrayList<>(List.of(e1,e2,e3)));
         Laboratorio l2 = new Laboratorio(null, "Laboratorio 2", 20, StatusLaboratorio.EM_MANUTENCAO, new ArrayList<>(List.of(e4,e5)));
 
-        Reserva r1 = new Reserva(null, u4, l1, LocalDate.of(2026, 5, 10), LocalTime.of(8, 0), LocalTime.of(10, 0), StatusReserva.CONFIRMADA, LocalDateTime.now());
-        Reserva r2 = new Reserva(null, u4, l2, LocalDate.of(2026, 5, 10), LocalTime.of(10, 0), LocalTime.of(12, 0), StatusReserva.CONFIRMADA, LocalDateTime.now());
-        Reserva r3 = new Reserva(null, u5, l1, LocalDate.of(2026, 5, 11), LocalTime.of(14, 0), LocalTime.of(16, 0), StatusReserva.CONFIRMADA, LocalDateTime.now());
-        Reserva r4 = new Reserva(null, u5, l2, LocalDate.of(2026, 5, 11), LocalTime.of(16, 0), LocalTime.of(18, 0), StatusReserva.CANCELADA, LocalDateTime.now());
-
+        Reserva r1 = new Reserva(null, u4, l1, LocalDate.of(2026, 5, 10), LocalTime.of(8, 0), LocalTime.of(10, 0),"Aula de Programação 1", StatusReserva.CONFIRMADA, LocalDateTime.now());
+        Reserva r2 = new Reserva(null, u4, l2, LocalDate.of(2026, 5, 10), LocalTime.of(10, 0), LocalTime.of(12, 0), "Aula de Programação 1", StatusReserva.CONFIRMADA, LocalDateTime.now());
+        Reserva r3 = new Reserva(null, u5, l1, LocalDate.of(2026, 5, 11), LocalTime.of(14, 0), LocalTime.of(16, 0), "Aula de Porgramação 2", StatusReserva.CONFIRMADA, LocalDateTime.now());
+        Reserva r4 = new Reserva(null, u5, l2, LocalDate.of(2026, 5, 11), LocalTime.of(16, 0), LocalTime.of(18, 0), "Aula de Programação 2" ,StatusReserva.CANCELADA, LocalDateTime.now());
+        Reserva r5 = new Reserva(null, u4, l1, LocalDate.of(2026,4,28),LocalTime.of(10, 0), LocalTime.of(12, 0),"Aula de Porgramação Orientada a Objetos", StatusReserva.CONCLUIDA, LocalDateTime.now());
         e1.setLaboratorio(l1);
         e2.setLaboratorio(l1);
         e3.setLaboratorio(l1);
@@ -92,6 +92,6 @@ public class TesteConfig implements CommandLineRunner {
         usuarioRepository.saveAll(Arrays.asList(u1, u2, u3, u4, u5));
         solicitacaoCadastroRepository.saveAll(Arrays.asList(s1, s2));
         laboratorioRepository.saveAll(Arrays.asList(l1, l2));
-        reservaRepository.saveAll(Arrays.asList(r1, r2, r3, r4));
+        reservaRepository.saveAll(Arrays.asList(r1, r2, r3, r4, r5));
     }
 }

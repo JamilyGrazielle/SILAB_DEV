@@ -6,5 +6,5 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public record ReservaResponseDTO(Long id, String nomeProfessor, String nomeLaboratorio, LocalDate data, LocalTime horaInicio, LocalTime horaFim, StatusReserva status, LocalDateTime dataSolicitacao) {
+public record ReservaResponseDTO(Long id, String nomeProfessor, String nomeLaboratorio, LocalDate data, LocalTime horaInicio, LocalTime horaFim, String motivo, StatusReserva status, LocalDateTime dataSolicitacao) {
 }

@@ -3,12 +3,13 @@ package com.ifma.silab.service;
 import com.ifma.silab.dto.equipamento.EquipamentoDTO;
 import com.ifma.silab.dto.laboratorio.LaboratorioCadastroDTO;
 import com.ifma.silab.dto.laboratorio.LaboratorioResponseDTO;
-import com.ifma.silab.dto.laboratorio.StatusLaboratorioDTO;
 import com.ifma.silab.model.Equipamento;
 import com.ifma.silab.model.Laboratorio;
 import com.ifma.silab.model.enums.StatusLaboratorio;
+import com.ifma.silab.model.enums.StatusReserva;
 import com.ifma.silab.repository.EquipamentoRepository;
 import com.ifma.silab.repository.LaboratorioRepository;
+import com.ifma.silab.repository.ReservaRepository;
 import com.ifma.silab.service.exceptions.LaboratorioNomeJaCadastrado;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ public class LaboratorioService {
 
     @Autowired
     EquipamentoRepository equipamentoRepository;
+    @Autowired
+    private ReservaRepository reservaRepository;
 
     public List<LaboratorioResponseDTO> listarTodos() {
         return laboratorioRepository.findAll()
@@ -83,6 +86,13 @@ public class LaboratorioService {
 
     public void removerLaboratorio(Long id) {
         Laboratorio laboratorio = laboratorioRepository.findById(id).orElseThrow(() -> new RuntimeException("Laboratório não encontrado"));
+
+        boolean temReservasAtivas = reservaRepository.existsByLaboratorioIdAndStatus(id, StatusReserva.CONFIRMADA);
+
+        if (temReservasAtivas) {
+            throw new RuntimeException("Não é possivel deletar um laboratório com reservas ativas");
+        }
+
         laboratorioRepository.delete(laboratorio);
     }
 
@@ -95,13 +105,6 @@ public class LaboratorioService {
 
         laboratorio.setNome(dto.getNome());
         laboratorio.setCapacidade(dto.getCapacidade());
-        laboratorioRepository.save(laboratorio);
-    }
-
-    public void atualizarStatusLaboratorio(Long id, StatusLaboratorioDTO dto) {
-        Laboratorio laboratorio = laboratorioRepository.findById(id).orElseThrow(() -> new RuntimeException("Laboratório não encontrado"));
-
-        laboratorio.setStatus(dto.status());
         laboratorioRepository.save(laboratorio);
     }
 

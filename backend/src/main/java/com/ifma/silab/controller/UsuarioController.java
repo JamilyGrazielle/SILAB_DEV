@@ -1,8 +1,10 @@
 package com.ifma.silab.controller;
 
 import com.ifma.silab.dto.usuario.StatusUsuarioDTO;
+import com.ifma.silab.dto.usuario.UsuarioCadastroDTO;
 import com.ifma.silab.dto.usuario.UsuarioResponseDTO;
 import com.ifma.silab.model.Usuario;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,6 +31,12 @@ public class UsuarioController {
                                               @RequestBody StatusUsuarioDTO dto,
                                               @AuthenticationPrincipal Usuario solicitante) {
         usuarioService.mudarStatus(id, dto.status(), solicitante);
-        return ResponseEntity.ok("Status atualizado com sucesso!");
+        return ResponseEntity.ok("Status atualizado com sucesso.");
+    }
+
+    @PostMapping
+    public ResponseEntity<String> cadastrarManualmente(@AuthenticationPrincipal Usuario solicitante, @RequestBody @Valid UsuarioCadastroDTO dto) {
+        usuarioService.cadastrarManualmente(solicitante, dto);
+        return ResponseEntity.ok("Cadastro feito com sucesso.");
     }
 }

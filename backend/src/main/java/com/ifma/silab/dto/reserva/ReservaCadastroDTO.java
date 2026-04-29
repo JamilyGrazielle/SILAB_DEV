@@ -21,4 +21,10 @@ public class ReservaCadastroDTO {
     @NotNull(message = "Informe a hora final da reserva.")
     private LocalTime horaFim;
 
+    private String motivo;
+
+    private boolean recorrente = false;
+
+    private LocalDate dataFimRecorrencia;
+
 }

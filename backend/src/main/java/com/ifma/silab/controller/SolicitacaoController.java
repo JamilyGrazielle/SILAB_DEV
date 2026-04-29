@@ -13,7 +13,7 @@ import java.util.List;
 public class SolicitacaoController {
 
     @Autowired
-    SolicitacaoService solicitacaoService;
+    private SolicitacaoService solicitacaoService;
 
     @GetMapping
     public ResponseEntity<List<SolicitacaoResponseDTO>> findAll() {

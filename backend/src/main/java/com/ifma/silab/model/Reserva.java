@@ -38,6 +38,8 @@ public class Reserva {
     @Column(name = "hora_fim",nullable = false)
     private LocalTime horaFim;
 
+    private String motivo;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private StatusReserva status;

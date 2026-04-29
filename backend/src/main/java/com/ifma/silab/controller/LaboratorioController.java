@@ -3,7 +3,6 @@ package com.ifma.silab.controller;
 import com.ifma.silab.dto.equipamento.EquipamentoDTO;
 import com.ifma.silab.dto.laboratorio.LaboratorioCadastroDTO;
 import com.ifma.silab.dto.laboratorio.LaboratorioResponseDTO;
-import com.ifma.silab.dto.laboratorio.StatusLaboratorioDTO;
 import com.ifma.silab.service.LaboratorioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,12 +52,6 @@ public class LaboratorioController {
     public ResponseEntity<String> atualizarLaboratorio(@PathVariable Long id, @RequestBody @Valid LaboratorioCadastroDTO dto) {
         laboratorioService.atualizarLaboratorio(id, dto);
         return ResponseEntity.ok("Laboratório atualizado");
-    }
-
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<String> atualizarStatusLaboratorio(@PathVariable Long id, @RequestBody StatusLaboratorioDTO dto) {
-        laboratorioService.atualizarStatusLaboratorio(id, dto);
-        return ResponseEntity.ok("Status do laboratório atualizado");
     }
 
     @PostMapping("/{id}/equipamentos")
