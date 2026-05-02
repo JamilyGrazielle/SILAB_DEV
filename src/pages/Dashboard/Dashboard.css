@@ -1,0 +1,162 @@
+/* Container absoluto para sobrescrever o "body" verde do Login */
+.dashboard-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f8fafc; /* Fundo cinza bem clarinho (moderno) */
+  color: #334155;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-y: auto;
+}
+
+/* NAVBAR */
+.dash-header {
+  background: #ffffff;
+  height: 70px;
+  padding: 0 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.dash-logo img {
+  height: 45px;
+  width: auto;
+}
+
+.dash-user-menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #1e9955; /* Verde IFMA */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.user-name {
+  font-size: 0.95rem;
+  color: #475569;
+}
+
+.btn-logout-modern {
+  background: #fee2e2; /* Vermelho claro */
+  color: #dc2626;      /* Vermelho escuro */
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-logout-modern:hover {
+  background: #fca5a5;
+}
+
+/* ÁREA PRINCIPAL */
+.dash-main {
+  padding: 3rem 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dash-welcome h1 {
+  font-size: 2rem;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+  font-weight: 800;
+}
+
+.dash-welcome p {
+  color: #64748b;
+  margin-bottom: 3rem;
+  font-size: 1.05rem;
+}
+
+/* GRID DE CARDS */
+.dash-grid {
+  display: grid;
+  /* Grid responsivo: se a tela encolher, os cards caem para a linha de baixo */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.8rem;
+}
+
+.dash-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  border-color: #cbd5e1;
+}
+
+/* ÍCONES DOS CARDS */
+.card-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Cores específicas para cada módulo */
+.card-icon.reserv { background: #dcfce7; color: #16a34a; } /* Verde */
+.card-icon.labs { background: #e0e7ff; color: #4f46e5; }   /* Roxo/Azul */
+.card-icon.users { background: #ffedd5; color: #d97706; }  /* Laranja */
+
+.dash-card h3 {
+  font-size: 1.3rem;
+  color: #1e293b;
+  margin-bottom: 0.8rem;
+}
+
+.dash-card p {
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  flex-grow: 1; /* Empurra o botão pro final do card se o texto for curto */
+}
+
+.card-btn {
+  width: 100%;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.card-btn:hover {
+  background: #1e9955; /* Verde IFMA */
+  color: white;
+  border-color: #1e9955;
+}
