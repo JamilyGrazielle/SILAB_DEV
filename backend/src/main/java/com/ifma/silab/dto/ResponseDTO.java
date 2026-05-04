@@ -1,4 +1,6 @@
 package com.ifma.silab.dto;
 
-public record ResponseDTO(String nome, String token) {
+import com.ifma.silab.model.enums.Perfil;
+
+public record ResponseDTO(String nome, String token, Perfil perfil) {
 }
