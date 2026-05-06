@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
-import logoSilab from '../../assets/logo-silab.svg';
+import logoSilab from '../../assets/logo-silab copy.svg';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -18,13 +18,16 @@ export default function Login() {
     setLoading(true); 
 
     try {
-      const response = await axios.post('http://localhost:8080/api/login', {
+      const response = await api.post('/login', {
         matricula: matricula,
         senha: senha
       });
 
       localStorage.setItem('silab_token', response.data.token);
       localStorage.setItem('silab_user', response.data.nome);
+
+      //Guardando o perfil do usuário
+      localStorage.setItem('silab_perfil', response.data.perfil);
 
       // Redireciona o usuário para o dashboard após o sucesso
       navigate('/dashboard');
@@ -55,7 +58,7 @@ export default function Login() {
           <div className="logo-box">
             <img src={logoSilab} alt="Logo SILAB" style={{ width: '100%', height: '100%' }} />
           </div>
-          <span className="sys-subtitle">Sistema de Gestão de Reserva de Laboratórios</span>
+          <span className="sys-subtitle">Sistema Integrado de Laboratórios</span>
         </div>
 
         <form onSubmit={handleLogin}>

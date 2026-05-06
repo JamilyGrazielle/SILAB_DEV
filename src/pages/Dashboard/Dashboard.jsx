@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'; // <-- Importando o decodificador
 import logoSilab from '../../assets/logo-silab.svg';
 import './Dashboard.css';
 
@@ -12,23 +11,18 @@ export default function Dashboard() {
   useEffect(() => {
     const token = localStorage.getItem('silab_token');
     const user = localStorage.getItem('silab_user');
+    
+    // Nova forma: Buscando o perfil que salvamos no momento do login
+    const userRole = localStorage.getItem('silab_perfil');
 
     if (!token) {
       navigate('/');
     } else {
       setNomeUsuario(user);
       
-      // Decodificando o token para pegar as permissões
-      try {
-        const decoded = jwtDecode(token);
-        
-        // Agora o backend manda a permissão dentro de "role"
-        if (decoded.role) {
-          setPerfil(decoded.role); 
-        }
-      } catch (error) {
-        console.error("Token inválido", error);
-        handleLogout();
+      // Se tivermos um perfil salvo, atualizamos o estado
+      if (userRole) {
+        setPerfil(userRole);
       }
     }
   }, [navigate]);
@@ -36,6 +30,7 @@ export default function Dashboard() {
   const handleLogout = () => {
     localStorage.removeItem('silab_token');
     localStorage.removeItem('silab_user');
+    localStorage.removeItem('silab_perfil'); // Limpando o perfil também!
     navigate('/');
   };
 
@@ -75,7 +70,8 @@ export default function Dashboard() {
           </div>
 
           {/* Só mostra para ADMIN ou ROOT (Professor não vê) */}
-          {(perfil === 'ROLE_ADMIN' || perfil === 'ROLE_ROOT') && (
+          {/* Atenção: O backend envia "ADMIN" ou "ROOT", sem o "ROLE_" na frente */}
+          {(perfil === 'ADMIN' || perfil === 'ROOT') && (
             <>
               <div className="dash-card">
                 <div className="card-icon labs">
