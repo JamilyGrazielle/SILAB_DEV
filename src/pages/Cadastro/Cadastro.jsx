@@ -54,7 +54,8 @@ export default function Cadastro() {
   };
 
   return (
-    <>
+    /* AQUI ESTÁ A CORREÇÃO: Envelopamos tudo com a classe login-page-wrapper */
+    <div className="login-page-wrapper">
       <div className="bg-layer"></div>
 
       <div className="card card-cadastro">
@@ -115,6 +116,6 @@ export default function Cadastro() {
           ← Voltar para o login
         </Link>
       </div>
-    </>
+    </div>
   );
 }
