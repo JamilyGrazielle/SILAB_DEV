@@ -1,112 +1,270 @@
-.manu-container {
-  position: relative;
-  min-height: 100vh;
-  padding: 2rem;
-  font-family: 'Inter', sans-serif;
-  background-color: #f4f7f6;
+/* src/pages/Manutencoes/Manutencoes.css */
+
+.manutencoes-container {
+  padding: 2rem 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-.manu-header {
+.manutencoes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 1rem;
+}
+
+.manutencoes-title h2 {
+  font-size: 2rem;
+  color: #0f172a;
+  font-weight: 800;
+  margin-bottom: 0.3rem;
+}
+
+.manutencoes-title p {
+  color: #64748b;
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.btn-add-manutencao {
+  background: #ea580c; /* Laranja forte combinando com o ícone do painel */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);
+}
+
+.btn-add-manutencao:hover {
+  background: #c2410c;
+  transform: translateY(-2px);
+}
+
+/* GRID E CARDS DE MANUTENÇÃO */
+.manutencoes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+}
+
+.manutencao-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  transition: box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.manutencao-card:hover {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+}
+
+.manutencao-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.2rem;
+}
+
+.manutencao-card-header h3 {
+  font-size: 1.25rem;
+  color: #1e293b;
+  margin: 0;
+}
+
+.status-badge-manut {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-badge-manut.ativo {
+  background: #ffedd5;
+  color: #c2410c; /* Laranja/Vermelho */
+}
+
+.status-badge-manut.encerrado {
+  background: #f1f5f9;
+  color: #64748b; /* Cinza */
+}
+
+.manutencao-card-body {
+  flex: 1;
+  color: #475569;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.manutencao-card-body p {
+  margin: 0.4rem 0;
+}
+
+.motivo-box {
+  background: #f8fafc;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin-top: 10px !important;
+  font-style: italic;
+}
+
+.manutencao-card-footer {
+  min-height: 40px; 
+}
+
+.btn-encerrar-manutencao {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-encerrar-manutencao:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+/* REAPROVEITAMENTO DO ESTILO DO MODAL */
+.modal-overlay { /* Já existe no CSS Global se você unificar depois, mas mantemos aqui para isolar */
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease-out;
+  padding: 1rem;
+}
+
+.modal-box {
+  background: white;
+  width: 100%;
+  max-width: 550px; 
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  background: white;
-  padding: 1.5rem 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  flex-shrink: 0;
 }
 
-.btn-novo-bloqueio {
-  background-color: #f97316; /* Laranja de alerta */
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease;
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #0f172a;
 }
 
-.btn-novo-bloqueio:hover { background-color: #ea580c; }
-
-/* Estilo da Tabela */
-.table-responsive {
-  background: white;
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  overflow-x: auto;
-}
-
-.manu-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-.manu-table th, .manu-table td {
-  padding: 1rem;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.manu-table th {
-  color: #64748b;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-}
-
-.manu-table td { color: #1e293b; font-size: 0.95rem; }
-
-.btn-encerrar {
-  background: #d1fae5;
-  color: #065f46;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.btn-encerrar:hover { background: #10b981; color: white; }
-
-.form-row {
+.modal-box form {
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0; 
 }
 
-.form-row .form-group {
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
   flex: 1;
 }
 
-textarea {
-  width: 100%;
-  padding: 0.75rem;
+.modal-body::-webkit-scrollbar { width: 6px; }
+.modal-body::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+.modal-body::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+.warning-box {
+  background: #fff7ed;
+  border-left: 4px solid #ea580c;
+  padding: 12px 15px;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 1.5rem;
+}
+
+.warning-box p {
+  margin: 0;
+  color: #9a3412;
+  font-size: 0.9rem;
+}
+
+.row-group { display: flex; gap: 15px; }
+.half { flex: 1; }
+
+.input-group { margin-bottom: 1.2rem; display: flex; flex-direction: column; }
+.input-group label { font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 5px; }
+.input-group input, .input-group select, .input-group textarea {
+  padding: 10px 12px;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
+  font-size: 0.95rem;
   font-family: inherit;
-  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+  color: #334155;
+  background: white;
+}
+.input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+  border-color: #ea580c;
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
 }
 
-.modal-aviso {
-  color: #ef4444;
-  font-size: 0.85rem;
-  margin-bottom: 1rem;
-  background: #fef2f2;
-  padding: 0.75rem;
-  border-radius: 6px;
-  border-left: 4px solid #ef4444;
+.modal-footer {
+  padding: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  background: #f8fafc;
+  border-radius: 0 0 16px 16px;
+  flex-shrink: 0;
 }
 
-.btn-confirmar-bloqueio {
-  padding: 0.75rem 1.5rem;
-  background: #f97316;
-  border: none;
+.btn-cancel {
+  padding: 10px 20px;
+  border: 1px solid #cbd5e1;
+  background: white;
   border-radius: 8px;
-  color: white;
   font-weight: 600;
   cursor: pointer;
 }
 
-.btn-confirmar-bloqueio:hover { background: #ea580c; }
+.btn-save-warning {
+  padding: 10px 20px;
+  background: #ea580c; /* Laranja para alertar que é uma ação drástica */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-save-warning:disabled, .btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

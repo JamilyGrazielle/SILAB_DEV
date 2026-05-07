@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import './Manutencoes.css';
 
 export default function Manutencoes() {
-  const navigate = useNavigate();
   const [bloqueios, setBloqueios] = useState([]);
   const [laboratorios, setLaboratorios] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [erro, setErro] = useState('');
 
   const [formData, setFormData] = useState({
     laboratorioId: '',
@@ -18,186 +18,206 @@ export default function Manutencoes() {
     motivo: ''
   });
 
-  const fetchData = async () => {
+  // Busca o histórico de manutenções
+  const fetchBloqueios = async () => {
     setLoading(true);
     try {
-      // Busca o histórico de bloqueios e a lista de laboratórios em paralelo
-      const [resBloqueios, resLabs] = await Promise.all([
-        api.get('/bloqueios'),
-        api.get('/laboratorios')
-      ]);
-      setBloqueios(resBloqueios.data);
-      setLaboratorios(resLabs.data);
+      const response = await api.get('/bloqueios');
+      setBloqueios(response.data || []);
     } catch (error) {
-      console.error("Erro ao buscar dados de manutenção:", error);
-      alert('Erro ao carregar a página de manutenções.');
+      console.error("Erro ao buscar manutenções:", error);
     } finally {
       setLoading(false);
     }
   };
 
+  // Busca os laboratórios para o select do modal
+  const fetchLaboratorios = async () => {
+    try {
+      const response = await api.get('/laboratorios');
+      setLaboratorios(response.data || []);
+    } catch (error) {
+      console.error("Erro ao buscar laboratórios:", error);
+    }
+  };
+
   useEffect(() => {
-    fetchData();
+    fetchBloqueios();
+    fetchLaboratorios();
   }, []);
 
-  const handleEncerrar = async (id, nomeLab) => {
-    if (!window.confirm(`Deseja realmente encerrar a manutenção do ${nomeLab} e liberá-lo para reservas?`)) return;
+  const openCreateModal = () => {
+    setFormData({
+      laboratorioId: '',
+      dataInicio: '',
+      dataFim: '',
+      motivo: ''
+    });
+    setErro('');
+    setIsModalOpen(true);
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSalvar = async (e) => {
+    e.preventDefault();
+    if (isSaving) return;
+
+    if (new Date(formData.dataFim) <= new Date(formData.dataInicio)) {
+      setErro('A data final deve ser posterior à data de início.');
+      return;
+    }
+
+    setIsSaving(true);
+    setErro('');
 
     try {
+      const payload = {
+        laboratorioId: Number(formData.laboratorioId),
+        dataInicio: formData.dataInicio, // Formato YYYY-MM-DDTHH:mm esperado pelo backend
+        dataFim: formData.dataFim,
+        motivo: formData.motivo
+      };
+
+      await api.post('/bloqueios', payload);
+      setIsModalOpen(false);
+      fetchBloqueios();
+    } catch (error) {
+      if (error.response && error.response.data) {
+        setErro(error.response.data.message || 'Erro ao registrar manutenção.');
+      } else {
+        setErro('Erro de conexão com o servidor.');
+      }
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleEncerrar = async (id) => {
+    if (!window.confirm("Deseja realmente encerrar esta manutenção? O laboratório ficará disponível novamente.")) return;
+    
+    try {
       await api.patch(`/bloqueios/${id}/encerrar`);
-      alert('Manutenção encerrada. O laboratório já está disponível!');
-      fetchData(); // Atualiza a lista
+      fetchBloqueios();
     } catch (error) {
       alert(error.response?.data?.message || 'Erro ao encerrar manutenção.');
     }
   };
 
-  const handleSalvar = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      await api.post('/bloqueios', {
-        laboratorioId: parseInt(formData.laboratorioId),
-        dataInicio: formData.dataInicio, // O input datetime-local já envia no formato compatível com o Spring
-        dataFim: formData.dataFim,
-        motivo: formData.motivo
-      });
-      alert('Laboratório bloqueado com sucesso! Reservas conflitantes foram canceladas.');
-      setShowModal(false);
-      fetchData();
-    } catch (error) {
-      alert(error.response?.data?.message || 'Erro ao criar bloqueio.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const formatarData = (dataString) => {
+  // Formata Data e Hora (Ex: 2026-05-10T08:00 -> 10/05/2026 às 08:00)
+  const formatarDataHora = (dataString) => {
+    if (!dataString) return '';
     const data = new Date(dataString);
-    return data.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+    return data.toLocaleString('pt-BR', { 
+      day: '2-digit', month: '2-digit', year: 'numeric', 
+      hour: '2-digit', minute: '2-digit' 
+    }).replace(',', ' às');
   };
 
   return (
-    <div className="manu-container">
-      <header className="manu-header">
-        <div className="back-btn" onClick={() => navigate('/dashboard')}>
-          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          Voltar ao Dashboard
+    <div className="manutencoes-container">
+      <div className="manutencoes-header">
+        <div className="manutencoes-title">
+          <h2>Controle de Manutenções</h2>
+          <p>Bloqueie laboratórios para reparos e visualize o histórico.</p>
         </div>
-        <h2>Gestão de Manutenções</h2>
-        <button className="btn-novo-bloqueio" onClick={() => {
-          setFormData({ laboratorioId: '', dataInicio: '', dataFim: '', motivo: '' });
-          setShowModal(true);
-        }}>+ Agendar Manutenção</button>
-      </header>
+        <button className="btn-add-manutencao" onClick={openCreateModal}>
+          + Registrar Manutenção
+        </button>
+      </div>
 
-      <main className="manu-main">
+      <div className="manutencoes-content">
         {loading ? (
-          <div className="loading-state">Carregando histórico...</div>
-        ) : bloqueios.length === 0 ? (
-          <div className="empty-state">Nenhum registro de manutenção encontrado.</div>
+          <div className="manutencoes-loading">Carregando histórico...</div>
+        ) : (!bloqueios || bloqueios.length === 0) ? (
+          <div className="manutencoes-empty">Nenhum registro de manutenção encontrado.</div>
         ) : (
-          <div className="table-responsive">
-            <table className="manu-table">
-              <thead>
-                <tr>
-                  <th>Laboratório</th>
-                  <th>Início</th>
-                  <th>Fim Previsto</th>
-                  <th>Motivo</th>
-                  <th>Status</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {bloqueios.map(b => (
-                  <tr key={b.id}>
-                    <td><strong>{b.nomeLaboratorio}</strong></td>
-                    <td>{formatarData(b.dataInicio)}</td>
-                    <td>{formatarData(b.dataFim)}</td>
-                    <td>{b.motivo}</td>
-                    <td>
-                      <span className={`status-badge ${b.ativo ? 'status-manutencao' : 'status-ok'}`}>
-                        {b.ativo ? 'Em Manutenção' : 'Encerrado'}
-                      </span>
-                    </td>
-                    <td>
-                      {b.ativo && (
-                        <button className="btn-encerrar" onClick={() => handleEncerrar(b.id, b.nomeLaboratorio)}>
-                          Liberar Sala
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="manutencoes-grid">
+            {bloqueios.map(bloqueio => (
+              <div key={bloqueio.id} className="manutencao-card">
+                <div className="manutencao-card-header">
+                  <h3>{bloqueio.nomeLaboratorio}</h3>
+                  <span className={`status-badge-manut ${bloqueio.ativo ? 'ativo' : 'encerrado'}`}>
+                    {bloqueio.ativo ? 'Em Andamento' : 'Encerrada'}
+                  </span>
+                </div>
+                
+                <div className="manutencao-card-body">
+                  <p><strong>Início:</strong> {formatarDataHora(bloqueio.dataInicio)}</p>
+                  <p><strong>Previsão de Fim:</strong> {formatarDataHora(bloqueio.dataFim)}</p>
+                  <p className="motivo-box"><strong>Motivo:</strong> {bloqueio.motivo}</p>
+                </div>
+                
+                <div className="manutencao-card-footer">
+                  {bloqueio.ativo && (
+                    <button className="btn-encerrar-manutencao" onClick={() => handleEncerrar(bloqueio.id)}>
+                      Encerrar Antecipadamente
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         )}
-      </main>
+      </div>
 
-      {/* Modal de Agendamento */}
-      {showModal && (
+      {/* MODAL DE CRIAÇÃO */}
+      {isModalOpen && (
         <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Agendar Manutenção</h3>
-            <p className="modal-aviso">Atenção: Ao salvar, todas as reservas confirmadas neste período serão canceladas automaticamente.</p>
+          <div className="modal-box">
+            <div className="modal-header">
+              <h3>Registrar Manutenção</h3>
+              <button type="button" className="btn-close-modal" onClick={() => setIsModalOpen(false)}>&times;</button>
+            </div>
             
             <form onSubmit={handleSalvar}>
-              <div className="form-group">
-                <label>Laboratório</label>
-                <select 
-                  value={formData.laboratorioId} 
-                  onChange={(e) => setFormData({...formData, laboratorioId: e.target.value})}
-                  required
-                >
-                  <option value="">Selecione um laboratório...</option>
-                  {/* Lista apenas laboratórios que estão disponíveis */}
-                  {laboratorios.filter(l => l.status === 'DISPONIVEL').map(lab => (
-                    <option key={lab.id} value={lab.id}>{lab.nome}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Data/Hora Início</label>
-                  <input 
-                    type="datetime-local" 
-                    value={formData.dataInicio} 
-                    onChange={(e) => setFormData({...formData, dataInicio: e.target.value})}
-                    required 
-                  />
+              {erro && <div className="modal-error">{erro}</div>}
+              
+              <div className="modal-body">
+                <div className="warning-box">
+                  <p><strong>Atenção:</strong> Ao confirmar, o laboratório ficará indisponível e todas as reservas confirmadas neste período serão canceladas automaticamente.</p>
                 </div>
-                <div className="form-group">
-                  <label>Data/Hora Fim</label>
-                  <input 
-                    type="datetime-local" 
-                    value={formData.dataFim} 
-                    onChange={(e) => setFormData({...formData, dataFim: e.target.value})}
+
+                <div className="input-group">
+                  <label>Laboratório</label>
+                  <select name="laboratorioId" value={formData.laboratorioId} onChange={handleChange} required>
+                    <option value="" disabled>Selecione um laboratório</option>
+                    {laboratorios.map(lab => (
+                      <option key={lab.id} value={lab.id}>{lab.nome}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="row-group">
+                  <div className="input-group half">
+                    <label>Data e Hora Início</label>
+                    <input type="datetime-local" name="dataInicio" value={formData.dataInicio} onChange={handleChange} required />
+                  </div>
+                  <div className="input-group half">
+                    <label>Data e Hora Fim</label>
+                    <input type="datetime-local" name="dataFim" value={formData.dataFim} onChange={handleChange} required />
+                  </div>
+                </div>
+
+                <div className="input-group">
+                  <label>Motivo da Manutenção</label>
+                  <textarea 
+                    name="motivo" 
+                    value={formData.motivo} 
+                    onChange={handleChange} 
                     required 
-                  />
+                    placeholder="Descreva o motivo da interdição (Ex: Troca de cabeamento de rede)"
+                    rows="3"
+                  ></textarea>
                 </div>
               </div>
 
-              <div className="form-group">
-                <label>Motivo da Manutenção</label>
-                <textarea 
-                  rows="3"
-                  value={formData.motivo} 
-                  onChange={(e) => setFormData({...formData, motivo: e.target.value})}
-                  placeholder="Ex: Troca do ar-condicionado, pintura..."
-                  required 
-                />
-              </div>
-
-              <div className="modal-actions">
-                <button type="button" className="btn-cancelar" onClick={() => setShowModal(false)} disabled={isSubmitting}>Cancelar</button>
-                <button type="submit" className="btn-confirmar-bloqueio" disabled={isSubmitting}>
-                  {isSubmitting ? 'Bloqueando...' : 'Confirmar Bloqueio'}
+              <div className="modal-footer">
+                <button type="button" className="btn-cancel" onClick={() => setIsModalOpen(false)} disabled={isSaving}>Cancelar</button>
+                <button type="submit" className="btn-save-warning" disabled={isSaving}>
+                  {isSaving ? 'Registrando...' : 'Confirmar Interdição'}
                 </button>
               </div>
             </form>

@@ -7,6 +7,7 @@ import Laboratorios from './pages/Laboratorios/Laboratorios';
 import Manutencoes from './pages/Manutencoes/Manutencoes';
 import Layout from './components/Layout/Layout';
 import Reservas from './pages/Reservas/Reservas';
+import Usuarios from './pages/Usuarios/Usuarios';
 
 export default function App() {
   return (
@@ -28,6 +29,8 @@ export default function App() {
           
           
           <Route path="/reservas" element={<Reservas />} />
+
+          <Route path="/usuarios" element={<Usuarios />} />
         </Route>
       </Routes>
     </BrowserRouter>

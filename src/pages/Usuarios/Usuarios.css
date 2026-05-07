@@ -1,0 +1,216 @@
+/* src/pages/Usuarios/Usuarios.css */
+
+.usuarios-container {
+  padding: 2rem 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.usuarios-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.usuarios-title h2 {
+  font-size: 2rem;
+  color: #0f172a;
+  font-weight: 800;
+  margin-bottom: 0.3rem;
+}
+
+.usuarios-title p {
+  color: #64748b;
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.btn-add-usuario {
+  background: #2563eb; /* Azul para diferenciar */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.btn-add-usuario:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+/* SISTEMA DE ABAS */
+.usuarios-tabs {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: 2rem;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  padding: 10px 15px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px; /* Sobrepõe a borda da linha */
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-btn:hover {
+  color: #0f172a;
+}
+
+.tab-btn.active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+}
+
+.badge-count {
+  background: #ef4444;
+  color: white;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+/* GRID E CARDS DE USUÁRIOS */
+.usuarios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.usuario-card, .solicitacao-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  transition: box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.usuario-card:hover, .solicitacao-card:hover {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+}
+
+.usuario-card-header, .solicitacao-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.usuario-card-header h3, .solicitacao-card-header h3 {
+  font-size: 1.25rem;
+  color: #1e293b;
+  margin: 0;
+}
+
+/* BADGES DE STATUS */
+.status-badge-user {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-badge-user.ativo { background: #dcfce7; color: #15803d; }
+.status-badge-user.inativo { background: #fee2e2; color: #b91c1c; }
+.badge-pendente { background: #fef3c7; color: #d97706; font-size: 0.75rem; padding: 4px 8px; border-radius: 20px; font-weight: 700; }
+
+.usuario-card-body, .solicitacao-card-body {
+  flex: 1;
+  color: #475569;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.usuario-card-body p, .solicitacao-card-body p {
+  margin: 0.4rem 0;
+}
+
+.usuario-card-footer {
+  min-height: 40px;
+}
+
+/* AÇÕES */
+.btn-toggle-status {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid;
+}
+
+.btn-danger { background: #fff5f5; color: #dc2626; border-color: #fca5a5; }
+.btn-danger:hover { background: #fee2e2; border-color: #ef4444; }
+
+.btn-success { background: #f0fdf4; color: #16a34a; border-color: #86efac; }
+.btn-success:hover { background: #dcfce7; border-color: #22c55e; }
+
+.solicitacao-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-approve {
+  flex: 1;
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-approve:hover { background: #15803d; }
+
+.btn-reject {
+  flex: 1;
+  background: #fff5f5;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  padding: 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-reject:hover { background: #fee2e2; border-color: #ef4444; }
+
+/* MODAL MANUAL */
+.btn-save-user {
+  padding: 10px 20px;
+  background: #2563eb; /* Azul */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-save-user:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Reutilizando as classes de estrutura do layout já estabelecidas */
+.modal-overlay, .modal-box, .modal-header, .modal-body, .modal-footer, .input-group, .row-group, .half, .btn-close-modal, .btn-cancel, .modal-error {
+  /* Estas classes foram definidas no módulo de Manutenções/Laboratórios e devem funcionar nativamente aqui */
+}
