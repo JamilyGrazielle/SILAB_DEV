@@ -26,7 +26,7 @@ export default function Login() {
       localStorage.setItem('silab_token', response.data.token);
       localStorage.setItem('silab_user', response.data.nome);
 
-      //Guardando o perfil do usuário
+      // Guardando o perfil do usuário
       localStorage.setItem('silab_perfil', response.data.perfil);
 
       // Redireciona o usuário para o dashboard após o sucesso
@@ -50,7 +50,8 @@ export default function Login() {
   };
 
   return (
-    <>
+    /* AQUI ESTÁ A MUDANÇA: Substituímos o fragmento vazio <> por esta div com a classe */
+    <div className="login-page-wrapper">
       <div className="bg-layer"></div>
 
       <div className="card">
@@ -130,6 +131,6 @@ export default function Login() {
         
         <p className="card-footer">Instituto Federal Educação, Ciência e Tecnologia do Maranhão &mdash; IFMA &copy; 2026</p>
       </div>
-    </>
+    </div> /* Fechamento da nossa nova div de encapsulamento */
   );
 }

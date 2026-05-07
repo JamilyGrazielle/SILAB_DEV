@@ -1,0 +1,112 @@
+.manu-container {
+  position: relative;
+  min-height: 100vh;
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+  background-color: #f4f7f6;
+}
+
+.manu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.btn-novo-bloqueio {
+  background-color: #f97316; /* Laranja de alerta */
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-novo-bloqueio:hover { background-color: #ea580c; }
+
+/* Estilo da Tabela */
+.table-responsive {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  overflow-x: auto;
+}
+
+.manu-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.manu-table th, .manu-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.manu-table th {
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.manu-table td { color: #1e293b; font-size: 0.95rem; }
+
+.btn-encerrar {
+  background: #d1fae5;
+  color: #065f46;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-encerrar:hover { background: #10b981; color: white; }
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.modal-aviso {
+  color: #ef4444;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  background: #fef2f2;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border-left: 4px solid #ef4444;
+}
+
+.btn-confirmar-bloqueio {
+  padding: 0.75rem 1.5rem;
+  background: #f97316;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-confirmar-bloqueio:hover { background: #ea580c; }

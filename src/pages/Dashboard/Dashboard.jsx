@@ -1,60 +1,35 @@
+// src/pages/Dashboard/Dashboard.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logoSilab from '../../assets/logo-silab.svg';
 import './Dashboard.css';
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [nomeUsuario, setNomeUsuario] = useState('');
   const [perfil, setPerfil] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('silab_token');
-    const user = localStorage.getItem('silab_user');
-    
-    // Nova forma: Buscando o perfil que salvamos no momento do login
-    const userRole = localStorage.getItem('silab_perfil');
+    // CORREÇÃO: Usando a chave exata que foi definida no Login.jsx
+    const userRole = localStorage.getItem('silab_perfil'); 
 
     if (!token) {
       navigate('/');
     } else {
-      setNomeUsuario(user);
-      
-      // Se tivermos um perfil salvo, atualizamos o estado
       if (userRole) {
         setPerfil(userRole);
       }
     }
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('silab_token');
-    localStorage.removeItem('silab_user');
-    localStorage.removeItem('silab_perfil'); // Limpando o perfil também!
-    navigate('/');
-  };
-
   return (
-    <div className="dashboard-wrapper">
-      <header className="dash-header">
-        <div className="dash-logo">
-          <img src={logoSilab} alt="Logo SiLAB" />
-        </div>
-        <div className="dash-user-menu">
-          <div className="user-avatar">
-            {nomeUsuario ? nomeUsuario.charAt(0).toUpperCase() : 'U'}
-          </div>
-          <span className="user-name">Olá, <strong>{nomeUsuario}</strong></span>
-          <button onClick={handleLogout} className="btn-logout-modern">Sair</button>
-        </div>
-      </header>
+    <div className="dash-container">
+      <div className="dash-title-section">
+        <h2>Painel de Controle</h2>
+        <p>Bem-vindo ao Sistema Integrado de Laboratórios do IFMA.</p>
+      </div>
 
-      <main className="dash-main">
-        <div className="dash-welcome">
-          <h1>Painel de Controle</h1>
-          <p>Bem-vindo ao Sistema Integrado de Laboratórios do IFMA.</p>
-        </div>
-
+      {/* NOVO: Adicionado um wrapper para o grid para facilitar o alinhamento centralizado */}
+      <div className="dash-grid-wrapper">
         <div className="dash-grid">
           
           {/* Card visível para todos (Professores, Admins e Root) */}
@@ -66,11 +41,10 @@ export default function Dashboard() {
             </div>
             <h3>Minhas Reservas</h3>
             <p>Visualize a agenda, crie novas reservas e gerencie seus agendamentos de laboratório.</p>
-            <button className="card-btn">Acessar Agenda</button>
+            <button className="card-btn" onClick={() => navigate('/reservas')}>Acessar Agenda</button>
           </div>
 
-          {/* Só mostra para ADMIN ou ROOT (Professor não vê) */}
-          {/* Atenção: O backend envia "ADMIN" ou "ROOT", sem o "ROLE_" na frente */}
+          {/* Só mostra para ADMIN ou ROOT */}
           {(perfil === 'ADMIN' || perfil === 'ROOT') && (
             <>
               <div className="dash-card">
@@ -94,11 +68,22 @@ export default function Dashboard() {
                 <p>Aprove ou rejeite cadastros pendentes e altere permissões de acesso do sistema.</p>
                 <button className="card-btn" onClick={() => navigate('/usuarios')}>Analisar</button>
               </div>
+
+              <div className="dash-card">
+                <div className="card-icon manutencao" style={{color: '#ea580c', backgroundColor: '#ffedd5', padding: '12px', borderRadius: '12px', width: 'fit-content', marginBottom: '1rem'}}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                  </svg>
+                </div>
+                <h3>Manutenções</h3>
+                <p>Bloqueie laboratórios para reparos e visualize o histórico de interdições.</p>
+                <button className="card-btn" onClick={() => navigate('/manutencoes')}>Auditar</button>
+              </div>
             </>
           )}
 
         </div>
-      </main>
+      </div>
     </div>
   );
 }

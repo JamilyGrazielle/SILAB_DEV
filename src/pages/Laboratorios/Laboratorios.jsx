@@ -1,36 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
+import api from '../../services/api'; // Verifique se este caminho está correto no seu projeto!
 import './Laboratorios.css';
 
 export default function Laboratorios() {
-  const navigate = useNavigate();
   const [laboratorios, setLaboratorios] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // Estados do Modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState('create'); 
+  const [isSaving, setIsSaving] = useState(false); 
   const [erro, setErro] = useState('');
 
-  // Estados do Modal e Formulário
-  const [showModal, setShowModal] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [currentLabId, setCurrentLabId] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false); // Estado para travar o botão de salvar
-
+  // Estado do Formulário
   const [formData, setFormData] = useState({
+    id: null,
     nome: '',
     capacidade: '',
-    equipamentos: [] // Array de { nome: '', quantidade: '' }
+    equipamentos: []
   });
 
-  // Função para buscar laboratórios (separada para podermos recarregar a lista depois de salvar/deletar)
+  // Estado para os inputs rápidos de equipamento
+  const [equipInput, setEquipInput] = useState({ nome: '', quantidade: '' });
+
+  // Buscar laboratórios ao carregar a página
   const fetchLaboratorios = async () => {
     setLoading(true);
     try {
       const response = await api.get('/laboratorios');
-      setLaboratorios(response.data);
-      setErro('');
+      setLaboratorios(response.data || []);
     } catch (error) {
-      console.error("Erro ao buscar laboratórios:", error);
-      setErro('Não foi possível carregar a lista de laboratórios.');
+      console.error("Erro ao buscar laboratórios", error);
     } finally {
       setLoading(false);
     }
@@ -40,228 +40,204 @@ export default function Laboratorios() {
     fetchLaboratorios();
   }, []);
 
-  // --- FUNÇÕES DE EXCLUSÃO ---
-  const handleRemover = async (id, nome) => {
-    if (!window.confirm(`Tem certeza que deseja remover o laboratório "${nome}"?`)) return;
+  const openCreateModal = () => {
+    setModalMode('create');
+    setFormData({ id: null, nome: '', capacidade: '', equipamentos: [] });
+    setEquipInput({ nome: '', quantidade: '' });
+    setErro('');
+    setIsModalOpen(true);
+  };
 
-    try {
-      await api.delete(`/laboratorios/${id}`);
-      alert('Laboratório removido com sucesso!');
-      fetchLaboratorios(); // Recarrega a lista
-    } catch (error) {
-      // Aqui o seu backend já protege contra a remoção de laboratórios com reservas ativas!
-      const mensagem = error.response?.data?.message || 'Erro ao remover laboratório. Ele pode ter reservas ativas.';
-      alert(mensagem);
+  const openEditModal = (lab) => {
+    setModalMode('edit');
+    setFormData({
+      id: lab.id,
+      nome: lab.nome,
+      capacidade: lab.capacidade,
+      equipamentos: lab.equipamentos || [] // Blindagem contra null
+    });
+    setEquipInput({ nome: '', quantidade: '' });
+    setErro('');
+    setIsModalOpen(true);
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleEquipChange = (e) => {
+    setEquipInput({ ...equipInput, [e.target.name]: e.target.value });
+  };
+
+  const handleAddEquipamento = async () => {
+    if (!equipInput.nome || !equipInput.quantidade) return;
+
+    if (modalMode === 'create') {
+      setFormData({
+        ...formData,
+        equipamentos: [...(formData.equipamentos || []), { nome: equipInput.nome, quantidade: Number(equipInput.quantidade) }]
+      });
+      setEquipInput({ nome: '', quantidade: '' });
+    } else {
+      try {
+        await api.post(`/laboratorios/${formData.id}/equipamentos`, {
+          nome: equipInput.nome,
+          quantidade: Number(equipInput.quantidade)
+        });
+        const res = await api.get(`/laboratorios/${formData.id}`);
+        setFormData({ ...formData, equipamentos: res.data.equipamentos || [] });
+        setEquipInput({ nome: '', quantidade: '' });
+        fetchLaboratorios(); 
+      } catch (error) {
+        setErro('Erro ao adicionar equipamento.');
+      }
     }
   };
 
-  // --- FUNÇÕES DO FORMULÁRIO (MODAL) ---
-  const abrirModalNovo = () => {
-    setIsEditing(false);
-    setCurrentLabId(null);
-    setFormData({ nome: '', capacidade: '', equipamentos: [] });
-    setShowModal(true);
+  const handleRemoveEquipamento = async (index, equipId) => {
+    if (modalMode === 'create') {
+      const novosEquips = (formData.equipamentos || []).filter((_, i) => i !== index);
+      setFormData({ ...formData, equipamentos: novosEquips });
+    } else {
+      try {
+        await api.delete(`/laboratorios/${formData.id}/equipamentos/${equipId}`);
+        const novosEquips = (formData.equipamentos || []).filter(e => e.id !== equipId);
+        setFormData({ ...formData, equipamentos: novosEquips });
+        fetchLaboratorios();
+      } catch (error) {
+        setErro('Erro ao remover equipamento.');
+      }
+    }
   };
 
-  const abrirModalEditar = (lab) => {
-    setIsEditing(true);
-    setCurrentLabId(lab.id);
-    setFormData({ 
-      nome: lab.nome, 
-      capacidade: lab.capacidade, 
-      // Mapeamos os equipamentos que vieram do banco para o estado do formulário
-      equipamentos: lab.equipamentos.map(eq => ({ nome: eq.nome, quantidade: eq.quantidade }))
-    });
-    setShowModal(true);
-  };
-
-  const fecharModal = () => {
-    setShowModal(false);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  // --- FUNÇÕES PARA EQUIPAMENTOS DINÂMICOS ---
-  const addEquipamento = () => {
-    setFormData({
-      ...formData,
-      equipamentos: [...formData.equipamentos, { nome: '', quantidade: '' }]
-    });
-  };
-
-  const updateEquipamento = (index, campo, valor) => {
-    const novosEquipamentos = [...formData.equipamentos];
-    novosEquipamentos[index][campo] = valor;
-    setFormData({ ...formData, equipamentos: novosEquipamentos });
-  };
-
-  const removeEquipamento = (index) => {
-    const novosEquipamentos = formData.equipamentos.filter((_, i) => i !== index);
-    setFormData({ ...formData, equipamentos: novosEquipamentos });
-  };
-
-  // --- SALVAR (POST / PUT) ---
   const handleSalvar = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true); // Trava o botão para evitar envio duplicado
+    if (isSaving) return; 
+
+    setIsSaving(true);
+    setErro('');
 
     try {
-      if (isEditing) {
-        // Envia a lista completa de equipamentos no PUT
-        await api.put(`/laboratorios/${currentLabId}`, {
+      if (modalMode === 'create') {
+        const payload = {
           nome: formData.nome,
-          capacidade: parseInt(formData.capacidade),
-          equipamentos: formData.equipamentos.map(eq => ({
-            nome: eq.nome,
-            quantidade: parseInt(eq.quantidade)
-          }))
-        });
-        alert('Laboratório atualizado com sucesso!');
+          capacidade: Number(formData.capacidade),
+          equipamentos: formData.equipamentos || []
+        };
+        await api.post('/laboratorios/cadastrar', payload);
       } else {
-        // Rota POST: Cadastra lab + equipamentos
-        await api.post('/laboratorios/cadastrar', {
+        const payload = {
           nome: formData.nome,
-          capacidade: parseInt(formData.capacidade),
-          equipamentos: formData.equipamentos.map(eq => ({
-            nome: eq.nome,
-            quantidade: parseInt(eq.quantidade)
-          }))
-        });
-        alert('Laboratório cadastrado com sucesso!');
+          capacidade: Number(formData.capacidade),
+          equipamentos: [] 
+        };
+        await api.put(`/laboratorios/${formData.id}`, payload);
       }
-      fecharModal();
-      fetchLaboratorios();
+      
+      setIsModalOpen(false);
+      fetchLaboratorios(); 
     } catch (error) {
-      const mensagem = error.response?.data?.message || 'Erro ao salvar laboratório.';
-      alert(mensagem);
+      if (error.response && error.response.data) {
+        setErro(error.response.data.message || error.response.data);
+      } else {
+        setErro('Erro ao salvar laboratório.');
+      }
     } finally {
-      setIsSubmitting(false); // Libera o botão após o término (sucesso ou erro)
+      setIsSaving(false); 
     }
   };
 
   return (
     <div className="labs-container">
-      <header className="labs-header">
-        <div className="back-btn" onClick={() => navigate('/dashboard')}>
-          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          Voltar ao Dashboard
+      <div className="labs-header">
+        <div className="labs-title">
+          <h2>Gerenciar Laboratórios</h2>
+          <p>Adicione, edite ou gerencie equipamentos das salas.</p>
         </div>
-        <h2>Gestão de Laboratórios</h2>
-        <button className="btn-novo-lab" onClick={abrirModalNovo}>+ Novo Laboratório</button>
-      </header>
+        <button className="btn-add-lab" onClick={openCreateModal}>
+          + Novo Laboratório
+        </button>
+      </div>
 
-      <main className="labs-main">
+      <div className="labs-content">
         {loading ? (
-          <div className="loading-state">Carregando laboratórios...</div>
-        ) : erro ? (
-          <div className="error-state">{erro}</div>
-        ) : laboratorios.length === 0 ? (
-          <div className="empty-state">Nenhum laboratório cadastrado ainda.</div>
+          <div className="labs-loading">Carregando laboratórios...</div>
+        ) : (!laboratorios || laboratorios.length === 0) ? (
+          <div className="labs-empty">Nenhum laboratório cadastrado.</div>
         ) : (
           <div className="labs-grid">
-            {laboratorios.map((lab) => (
+            {laboratorios.map(lab => (
               <div key={lab.id} className="lab-card">
                 <div className="lab-card-header">
                   <h3>{lab.nome}</h3>
-                  <span className={`status-badge ${lab.status === 'DISPONIVEL' ? 'status-ok' : 'status-manutencao'}`}>
+                  <span className={`status-badge ${lab.status === 'DISPONIVEL' ? 'disponivel' : 'manutencao'}`}>
                     {lab.status === 'DISPONIVEL' ? 'Disponível' : 'Em Manutenção'}
                   </span>
                 </div>
-                
                 <div className="lab-card-body">
                   <p><strong>Capacidade:</strong> {lab.capacidade} alunos</p>
-                  <p><strong>Equipamentos:</strong> {lab.equipamentos.length} cadastrados</p>
+                  {/* Blindagem no reduce: garante que seja um array antes de somar */}
+                  <p><strong>Equipamentos:</strong> {(lab.equipamentos || []).reduce((acc, eq) => acc + (eq.quantidade || 0), 0)} itens totais</p>
                 </div>
-
-                <div className="lab-card-actions">
-                  <button className="btn-action edit" onClick={() => abrirModalEditar(lab)}>Editar</button>
-                  <button className="btn-action delete" onClick={() => handleRemover(lab.id, lab.nome)}>Remover</button>
+                <div className="lab-card-footer">
+                  <button className="btn-edit-lab" onClick={() => openEditModal(lab)}>
+                    Editar / Equipamentos
+                  </button>
                 </div>
               </div>
             ))}
           </div>
         )}
-      </main>
+      </div>
 
-      {/* MODAL DE CADASTRO / EDIÇÃO */}
-      {showModal && (
+      {isModalOpen && (
         <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>{isEditing ? 'Editar Laboratório' : 'Novo Laboratório'}</h3>
+          <div className="modal-box">
+            <div className="modal-header">
+              <h3>{modalMode === 'create' ? 'Cadastrar Novo Laboratório' : 'Editar Laboratório'}</h3>
+              <button type="button" className="btn-close-modal" onClick={() => setIsModalOpen(false)}>&times;</button>
+            </div>
+            
             <form onSubmit={handleSalvar}>
+              {erro && <div className="modal-error">{erro}</div>}
               
-              <div className="form-group">
-                <label>Nome do Laboratório</label>
-                <input 
-                  type="text" 
-                  name="nome" 
-                  value={formData.nome} 
-                  onChange={handleInputChange} 
-                  required 
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Capacidade (Alunos)</label>
-                <input 
-                  type="number" 
-                  name="capacidade" 
-                  value={formData.capacidade} 
-                  onChange={handleInputChange} 
-                  min="1" 
-                  required 
-                />
-              </div>
-
-              {/* Seção de Equipamentos */}
-              <div className="equipamentos-section">
-                <div className="equipamentos-header">
-                  <label>Equipamentos</label>
-                  <button type="button" className="btn-add-eqp" onClick={addEquipamento}>+ Adicionar</button>
+              <div className="modal-body">
+                <div className="input-group">
+                  <label>Nome do Laboratório</label>
+                  <input type="text" name="nome" value={formData.nome} onChange={handleChange} required placeholder="Ex: Lab de Redes 01" />
                 </div>
                 
-                {formData.equipamentos.map((eq, index) => (
-                  <div key={index} className="equipamento-row">
-                    <input 
-                      type="text" 
-                      placeholder="Nome (ex: Computador)" 
-                      value={eq.nome}
-                      onChange={(e) => updateEquipamento(index, 'nome', e.target.value)}
-                      required
-                    />
-                    <input 
-                      type="number" 
-                      placeholder="Qtd" 
-                      value={eq.quantidade}
-                      onChange={(e) => updateEquipamento(index, 'quantidade', e.target.value)}
-                      min="1"
-                      required
-                    />
-                    <button type="button" className="btn-remove-eqp" onClick={() => removeEquipamento(index)}>X</button>
+                <div className="input-group">
+                  <label>Capacidade (Alunos)</label>
+                  <input type="number" name="capacidade" value={formData.capacidade} onChange={handleChange} required min="1" placeholder="Ex: 30" />
+                </div>
+
+                <div className="equipamentos-section">
+                  <label>Equipamentos</label>
+                  <div className="equip-add-row">
+                    <input type="text" name="nome" value={equipInput.nome} onChange={handleEquipChange} placeholder="Nome (Ex: Computador)" />
+                    <input type="number" name="quantidade" value={equipInput.quantidade} onChange={handleEquipChange} min="1" placeholder="Qtd" />
+                    <button type="button" className="btn-add-equip" onClick={handleAddEquipamento}>Adicionar</button>
                   </div>
-                ))}
+
+                  <ul className="equip-list">
+                    {(!formData.equipamentos || formData.equipamentos.length === 0) && <li className="equip-empty">Nenhum equipamento adicionado.</li>}
+                    {(formData.equipamentos || []).map((equip, index) => (
+                      <li key={equip.id || index}>
+                        <span><strong>{equip.quantidade}x</strong> {equip.nome}</span>
+                        <button type="button" className="btn-del-equip" onClick={() => handleRemoveEquipamento(index, equip.id)}>
+                          Remover
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
 
-              <div className="modal-actions">
-                <button 
-                  type="button" 
-                  className="btn-cancelar" 
-                  onClick={fecharModal} 
-                  disabled={isSubmitting}
-                >
-                  Cancelar
-                </button>
-                <button 
-                  type="submit" 
-                  className="btn-confirmar" 
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? 'Salvando...' : 'Salvar'}
+              <div className="modal-footer">
+                <button type="button" className="btn-cancel" onClick={() => setIsModalOpen(false)} disabled={isSaving}>Cancelar</button>
+                <button type="submit" className="btn-save" disabled={isSaving}>
+                  {isSaving ? 'Salvando...' : 'Salvar Laboratório'}
                 </button>
               </div>
             </form>

@@ -31,7 +31,9 @@
   --font-body: 'DM Sans', system-ui, sans-serif;
 }
 
-body {
+/* src/pages/Login/Login.css */
+/* Mude 'body' para '.login-page-wrapper' */
+.login-page-wrapper {
   font-family: var(--font-body);
   min-height: 100vh;
   display: flex;
@@ -40,6 +42,7 @@ body {
   background: var(--green-900);
   overflow: auto;
   padding: 1.5rem;
+  width: 100%;
 }
 
 /* ── Background ───────────────────────────────────────────── */

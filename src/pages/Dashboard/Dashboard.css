@@ -1,109 +1,67 @@
-/* Container absoluto para sobrescrever o "body" verde do Login */
-.dashboard-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  min-height: 100vh;
-  background-color: #f8fafc; /* Fundo cinza bem clarinho (moderno) */
-  color: #334155;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  overflow-y: auto;
-}
+/* src/pages/Dashboard/Dashboard.css */
 
-/* NAVBAR */
-.dash-header {
-  background: #ffffff;
-  height: 70px;
-  padding: 0 5%;
+.dash-container {
+  padding: 0; 
+  width: 100%; 
+  margin: 0;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  border-bottom: 1px solid #e2e8f0;
+  flex-direction: column;
 }
 
-.dash-logo img {
-  height: 45px;
-  width: auto;
+.dash-title-section {
+  text-align: center; 
+  margin: 3rem auto 2rem; 
+  padding: 0 5%; 
 }
 
-.dash-user-menu {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.user-avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #1e9955; /* Verde IFMA */
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 1.1rem;
-}
-
-.user-name {
-  font-size: 0.95rem;
-  color: #475569;
-}
-
-.btn-logout-modern {
-  background: #fee2e2; /* Vermelho claro */
-  color: #dc2626;      /* Vermelho escuro */
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-logout-modern:hover {
-  background: #fca5a5;
-}
-
-/* ÁREA PRINCIPAL */
-.dash-main {
-  padding: 3rem 5%;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.dash-welcome h1 {
+.dash-title-section h2 {
   font-size: 2rem;
   color: #0f172a;
   margin-bottom: 0.5rem;
   font-weight: 800;
 }
 
-.dash-welcome p {
+.dash-title-section p {
   color: #64748b;
-  margin-bottom: 3rem;
   font-size: 1.05rem;
+  margin: 0;
 }
 
-/* GRID DE CARDS */
+.dash-grid-wrapper {
+  flex: 1; 
+  width: 100%;
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  padding: 1rem 5% 3rem; 
+}
+
 .dash-grid {
   display: grid;
-  /* Grid responsivo: se a tela encolher, os cards caem para a linha de baixo */
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
   gap: 1.8rem;
+  width: 100%;
+  justify-content: center; 
+  max-width: 1000px; 
 }
 
+/* --- CARD INDIVIDUAL --- */
 .dash-card {
   background: #ffffff;
-  border-radius: 14px;
+  border-radius: 14px; 
   padding: 2rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   border: 1px solid #e2e8f0;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
+  aspect-ratio: 1 / 1; 
+  overflow: hidden; 
+
+  /* NOVAS LINHAS PARA CORRIGIR O CARD ÚNICO DO PROFESSOR */
+  max-width: 320px; /* Impede que o card passe de 320px de largura/altura */
+  width: 100%; /* Garante que ele ocupe o espaço até chegar nos 320px */
+  margin: 0 auto; /* Centraliza o card perfeitamente se sobrar espaço na tela */
 }
 
 .dash-card:hover {
@@ -112,7 +70,6 @@
   border-color: #cbd5e1;
 }
 
-/* ÍCONES DOS CARDS */
 .card-icon {
   width: 54px;
   height: 54px;
@@ -123,10 +80,9 @@
   margin-bottom: 1.5rem;
 }
 
-/* Cores específicas para cada módulo */
-.card-icon.reserv { background: #dcfce7; color: #16a34a; } /* Verde */
-.card-icon.labs { background: #e0e7ff; color: #4f46e5; }   /* Roxo/Azul */
-.card-icon.users { background: #ffedd5; color: #d97706; }  /* Laranja */
+.card-icon.reserv { background: #dcfce7; color: #16a34a; }
+.card-icon.labs { background: #e0e7ff; color: #4f46e5; }
+.card-icon.users { background: #ffedd5; color: #d97706; }
 
 .dash-card h3 {
   font-size: 1.3rem;
@@ -138,8 +94,8 @@
   color: #64748b;
   font-size: 0.95rem;
   line-height: 1.6;
-  margin-bottom: 2rem;
-  flex-grow: 1; /* Empurra o botão pro final do card se o texto for curto */
+  margin-bottom: 1.5rem; 
+  flex-grow: 1; 
 }
 
 .card-btn {
@@ -153,10 +109,11 @@
   color: #475569;
   cursor: pointer;
   transition: all 0.2s;
+  margin-top: auto; 
 }
 
 .card-btn:hover {
-  background: #1e9955; /* Verde IFMA */
+  background: #16a34a; 
   color: white;
-  border-color: #1e9955;
+  border-color: #16a34a;
 }
