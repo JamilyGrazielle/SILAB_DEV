@@ -21,7 +21,7 @@ import java.util.List;
 
 @Configuration
 @Profile("test")
-public class TesteConfig implements CommandLineRunner {
+public class  TesteConfig implements CommandLineRunner {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
