@@ -35,6 +35,6 @@ public class LoginController {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         var token = tokenService.generateToken(usuario);
-        return ResponseEntity.ok(new ResponseDTO(usuario.getNome(), token));
+        return ResponseEntity.ok(new ResponseDTO(usuario.getNome(), token, usuario.getPerfil()));
     }
 }
