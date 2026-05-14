@@ -1,0 +1,72 @@
+/* Importa as mesmas regras globais e o background do Login */
+@import '../Login/Login.css';
+
+
+.card-cadastro {
+  width: 100%;
+  max-width: 800px; /* Ajustado: proporcional aos 5 campos, mais largo que o login (430px) */
+  padding: 2.5rem 2.8rem; /* Reduzido o padding lateral para os inputs aproveitarem melhor a largura */
+}
+
+.success-message {
+  background: rgba(60, 163, 70, 0.2);
+  border: 1px solid rgba(60, 163, 70, 0.5);
+  color: #e6ffe6;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 13px;
+  text-align: center;
+  margin-bottom: 1rem;
+  backdrop-filter: blur(4px);
+}
+
+.card-cadastro .field-group {
+  margin-bottom: 1rem;
+}
+
+.card-cadastro .glass-input {
+  height: 46px;
+}
+
+.link-voltar {
+  display: block;
+  text-align: center;
+  margin-top: 1.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.link-voltar:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+
+/* Telas médias (Tablets e monitores menores) */
+@media (max-width: 768px) {
+  .card-cadastro {
+    max-width: 94%; /* Ocupa mais da tela em tablets */
+    padding: 2rem 2rem;
+  }
+}
+
+/* Telas pequenas (Celulares) */
+@media (max-width: 480px) {
+  .card-cadastro {
+    max-width: 92%;
+    padding: 2rem 1.2rem;
+    border-radius: 20px;
+    min-height: auto;
+    margin: 1rem 0;
+  }
+}
+
+/* NOVO — sobrescreve a media query do Login.css que limitava a 450px */
+@media (min-width: 1200px) {
+  div.card.card-cadastro {
+    max-width: 520px;
+    padding: 2.5rem 2.8rem;
+  }
+}
