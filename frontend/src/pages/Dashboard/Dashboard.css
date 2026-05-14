@@ -1,0 +1,119 @@
+/* src/pages/Dashboard/Dashboard.css */
+
+.dash-container {
+  padding: 0; 
+  width: 100%; 
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-title-section {
+  text-align: center; 
+  margin: 3rem auto 2rem; 
+  padding: 0 5%; 
+}
+
+.dash-title-section h2 {
+  font-size: 2rem;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+  font-weight: 800;
+}
+
+.dash-title-section p {
+  color: #64748b;
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.dash-grid-wrapper {
+  flex: 1; 
+  width: 100%;
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  padding: 1rem 5% 3rem; 
+}
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+  gap: 1.8rem;
+  width: 100%;
+  justify-content: center; 
+  max-width: 1000px; 
+}
+
+/* --- CARD INDIVIDUAL --- */
+.dash-card {
+  background: #ffffff;
+  border-radius: 14px; 
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 1 / 1; 
+  overflow: hidden; 
+
+  /* NOVAS LINHAS PARA CORRIGIR O CARD ÚNICO DO PROFESSOR */
+  max-width: 320px; /* Impede que o card passe de 320px de largura/altura */
+  width: 100%; /* Garante que ele ocupe o espaço até chegar nos 320px */
+  margin: 0 auto; /* Centraliza o card perfeitamente se sobrar espaço na tela */
+}
+
+.dash-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  border-color: #cbd5e1;
+}
+
+.card-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.card-icon.reserv { background: #dcfce7; color: #16a34a; }
+.card-icon.labs { background: #e0e7ff; color: #4f46e5; }
+.card-icon.users { background: #ffedd5; color: #d97706; }
+
+.dash-card h3 {
+  font-size: 1.3rem;
+  color: #1e293b;
+  margin-bottom: 0.8rem;
+}
+
+.dash-card p {
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem; 
+  flex-grow: 1; 
+}
+
+.card-btn {
+  width: 100%;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: auto; 
+}
+
+.card-btn:hover {
+  background: #16a34a; 
+  color: white;
+  border-color: #16a34a;
+}

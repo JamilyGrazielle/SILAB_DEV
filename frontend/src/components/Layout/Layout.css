@@ -1,0 +1,116 @@
+/* src/components/Layout/Layout.css */
+
+/* Container global privado para resetar margens */
+.layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif; /* Alinhando fontes com dashboard */
+  margin: 0;
+  padding: 0;
+}
+
+/* HEADER FIXO NO TOPO */
+.layout-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background: #ffffff;
+  padding: 0 5%; /* Mantendo espaçamento lateral original de 5% */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Sombra mais suave como nas imagens */
+  border-bottom: 1px solid #e2e8f0;
+  z-index: 1000;
+}
+
+.layout-logo {
+  display: flex;
+  align-items: center;
+}
+
+.layout-logo img {
+  height: 40px; /* Altura original mantida */
+  width: auto;
+}
+
+/* MENU DO USUÁRIO (LADO DIREITO) */
+.layout-user-menu {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Gap ajustado para precisão (menor que o anterior de 1rem/16px) */
+}
+
+/* Avatar Verde Circular */
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #16a34a; /* Verde original IFMA mantido */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Texto "Olá, Usuário" */
+.user-name {
+  font-size: 0.95rem;
+  color: #475569;
+}
+
+.user-name strong {
+  color: #1e293b;
+  font-weight: 600; /* Peso da fonte ajustado para precisão */
+}
+
+/* BOTÃO SAIR (AJUSTE FINO DE PRECISÃO) */
+.btn-logout-precision {
+  /* Para precisão de AP6, usamos um fundo rosa/vermelho EXTREMAMENTE sutil */
+  /* Mudei para fff5f5 para ser quase branco com um toque de vermelho, não o rosa anterior */
+  background: #fff5f5; 
+  color: #dc2626; /* Vermelho escuro original mantido */
+  border: 1px solid #fee2e2; /* Adicionei uma borda sutil para definir o formato do botão como em AP6 */
+  padding: 7px 14px; /* Padding ajustado para precisão */
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-logout-precision:hover {
+  background: #fee2e2; /* Fica ligeiramente mais visível no hover */
+  border-color: #fca5a5;
+}
+
+/* ÁREA DE CONTEÚDO DINÂMICO */
+.layout-main {
+  flex: 1;
+  margin-top: 70px; /* Compensa o header fixo */
+  display: flex;
+  flex-direction: column;
+}
+
+/* FOOTER NO FINAL DA PÁGINA */
+.layout-footer {
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  padding: 1.5rem 5%;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.85rem;
+  margin-top: auto; 
+}
+
+.footer-sub {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 4px;
+}

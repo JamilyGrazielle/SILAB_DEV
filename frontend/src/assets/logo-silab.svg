@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 220" preserveAspectRatio="xMidYMid meet">
+    <defs>
+        <filter id="sombra" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.1" />
+        </filter>
+    </defs>
+    
+    <text font-family="'Montserrat', 'Inter', 'Segoe UI', 'Roboto', sans-serif" font-weight="900" font-size="140" fill="#1E293B">
+        <tspan x="20" y="152">S</tspan>
+        <tspan x="165" y="152">L</tspan>
+        <tspan x="255" y="152">A</tspan>
+        <tspan x="370" y="152">B</tspan>
+    </text>
+    
+    <g id="letra_i" transform="translate(2, 0)">
+        <circle cx="134" cy="36" r="14" fill="#DA251D" />
+        <rect x="120" y="56" width="28" height="28" rx="6" fill="#3CA346" />
+        <rect x="120" y="90" width="28" height="28" rx="6" fill="#3CA346" />
+        <rect x="120" y="124" width="28" height="28" rx="6" fill="#3CA346" />
+    </g>
+    
+    <text x="25" y="195" font-family="'Montserrat', 'Inter', 'Segoe UI', 'Roboto', sans-serif" font-weight="600" font-size="14" fill="#64748B" letter-spacing="1.5">
+        SISTEMA INTEGRADO DE LABORATÓRIOS
+    </text>
+</svg>

@@ -1,0 +1,371 @@
+/* src/pages/Laboratorios/Laboratorios.css */
+
+.labs-container {
+  padding: 2rem 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.labs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 1rem;
+}
+
+.labs-title h2 {
+  font-size: 2rem;
+  color: #0f172a;
+  font-weight: 800;
+  margin-bottom: 0.3rem;
+}
+
+.labs-title p {
+  color: #64748b;
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.btn-add-lab {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+}
+
+.btn-add-lab:hover {
+  background: #15803d;
+  transform: translateY(-2px);
+}
+
+/* GRID DE LABORATÓRIOS */
+.labs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.lab-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  transition: box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.lab-card:hover {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+}
+
+.lab-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.lab-card-header h3 {
+  font-size: 1.25rem;
+  color: #1e293b;
+  margin: 0;
+}
+
+.status-badge {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-badge.disponivel {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-badge.manutencao {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.lab-card-body {
+  flex: 1;
+  color: #475569;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.lab-card-body p {
+  margin: 0.3rem 0;
+}
+
+.btn-edit-lab {
+  width: 100%;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  padding: 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-edit-lab:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+/* MODAL / GLASSMORPHISM */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease-out;
+  padding: 1rem; /* Garante que o modal não encoste nas bordas da tela */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-box {
+  background: white;
+  width: 100%;
+  max-width: 550px;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh; /* Limita a altura a 90% da tela */
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* Garante que o header não encolha */
+  flex-shrink: 0; 
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #0f172a;
+}
+
+.btn-close-modal {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #64748b;
+}
+
+.btn-close-modal:hover { color: #ef4444; }
+
+/* A MÁGICA ACONTECE AQUI: O form precisa ser flex e min-height 0 para a rolagem funcionar */
+.modal-box form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0; 
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto; /* Ativa a rolagem APENAS no corpo do formulário */
+  flex: 1;
+}
+
+/* Estilizando a barra de rolagem para ficar moderna */
+.modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+.modal-body::-webkit-scrollbar-track {
+  background: #f1f5f9; 
+  border-radius: 10px;
+}
+.modal-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1; 
+  border-radius: 10px;
+}
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8; 
+}
+
+.modal-error {
+  margin: 1rem 1.5rem 0;
+  background: #fef2f2;
+  color: #b91c1c;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #fca5a5;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+/* O resto continua igual... */
+
+/* ... */
+
+.input-group {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+  border-color: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+/* SESSÃO DE EQUIPAMENTOS */
+.equipamentos-section {
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px dashed #cbd5e1;
+}
+
+.equipamentos-section > label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 10px;
+}
+
+.equip-add-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.equip-add-row input[name="nome"] { flex: 2; }
+.equip-add-row input[name="quantidade"] { flex: 1; min-width: 60px; }
+.equip-add-row input {
+  padding: 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+}
+
+.btn-add-equip {
+  background: #e2e8f0;
+  border: none;
+  padding: 0 15px;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-add-equip:hover { background: #cbd5e1; }
+
+.equip-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.equip-empty {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.equip-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.9rem;
+  color: #334155;
+}
+
+.btn-del-equip {
+  background: transparent;
+  color: #ef4444;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-del-equip:hover { text-decoration: underline; }
+
+.modal-footer {
+  padding: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  background: #f8fafc;
+  border-radius: 0 0 16px 16px;
+}
+
+.btn-cancel {
+  padding: 10px 20px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-save {
+  padding: 10px 20px;
+  background: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-save:disabled, .btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
