@@ -35,7 +35,7 @@ public class LaboratorioService {
                         l.getNome(),
                         l.getCapacidade(),
                         l.getStatus(),
-                        l.getEquipamentos().stream().map(e -> new EquipamentoDTO(e.getNome(), e.getQuantidade())).toList()))
+                        l.getEquipamentos().stream().map(e -> new EquipamentoDTO(e.getId(), e.getNome(), e.getQuantidade())).toList()))
                 .toList();
     }
 
@@ -47,7 +47,7 @@ public class LaboratorioService {
             laboratorio.getNome(),
             laboratorio.getCapacidade(),
             laboratorio.getStatus(),
-            laboratorio.getEquipamentos().stream().map(e -> new EquipamentoDTO(e.getNome(), e.getQuantidade())).toList());
+            laboratorio.getEquipamentos().stream().map(e -> new EquipamentoDTO(e.getId(), e.getNome(), e.getQuantidade())).toList());
     }
 
     public LaboratorioResponseDTO buscarPorNome(String nome) {
@@ -58,7 +58,7 @@ public class LaboratorioService {
                 laboratorio.getNome(),
                 laboratorio.getCapacidade(),
                 laboratorio.getStatus(),
-                laboratorio.getEquipamentos().stream().map(e -> new EquipamentoDTO(e.getNome(), e.getQuantidade())).toList());
+                laboratorio.getEquipamentos().stream().map(e -> new EquipamentoDTO(e.getId(), e.getNome(), e.getQuantidade())).toList());
     }
 
     public void cadastrarLaboratorio(LaboratorioCadastroDTO dto) {
@@ -99,7 +99,7 @@ public class LaboratorioService {
     public void atualizarLaboratorio(Long id, LaboratorioCadastroDTO dto) {
         Laboratorio laboratorio = laboratorioRepository.findById(id).orElseThrow(() -> new RuntimeException("Laboratório não encontrado"));
 
-        if (laboratorioRepository.existsByNomeIgnoreCase(dto.getNome())) {
+        if (laboratorioRepository.existsByNomeIgnoreCaseAndIdNot(dto.getNome(), id)) {
             throw new LaboratorioNomeJaCadastrado("Nome do laboratório já cadastrado.");
         }
 
@@ -110,6 +110,13 @@ public class LaboratorioService {
 
     public void adicionarEquipamento(Long laboratorioId, EquipamentoDTO dto) {
         Laboratorio laboratorio = laboratorioRepository.findById(laboratorioId).orElseThrow(() -> new RuntimeException("Laboratório não encontrado"));
+
+        boolean jaExiste = laboratorio.getEquipamentos().stream()
+                .anyMatch(e -> e.getNome().equalsIgnoreCase(dto.nome()));
+
+        if (jaExiste) {
+            throw new RuntimeException("Equipamento já cadastrado neste laboratório.");
+        }
 
         Equipamento equipamento = new Equipamento();
         equipamento.setLaboratorio(laboratorio);

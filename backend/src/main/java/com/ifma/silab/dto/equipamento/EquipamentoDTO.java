@@ -1,4 +1,4 @@
 package com.ifma.silab.dto.equipamento;
 
-public record EquipamentoDTO(String nome, Integer quantidade) {
+public record EquipamentoDTO(Long id, String nome, Integer quantidade) {
 }

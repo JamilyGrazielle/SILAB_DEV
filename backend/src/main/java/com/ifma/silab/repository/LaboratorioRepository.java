@@ -9,5 +9,6 @@ import java.util.Optional;
 @Repository
 public interface LaboratorioRepository extends JpaRepository<Laboratorio, Long> {
     Optional<Laboratorio> findByNomeContainingIgnoreCase(String nome);
+    boolean existsByNomeIgnoreCaseAndIdNot(String nome, Long id);
     boolean existsByNomeIgnoreCase(String nome);
 }
