@@ -204,7 +204,7 @@ export default function Usuarios() {
                   <div className="solicitacao-card-body">
                     <p><strong>Matrícula:</strong> {solic.matricula}</p>
                     <p><strong>E-mail:</strong> {solic.email}</p>
-                    <p><strong>Data:</strong> {new Date(solic.dataSolicitacao).toLocaleDateString('pt-BR')}</p>
+                    <p><strong>Data da Solicitação:</strong> {new Date(solic.dataSolicitacao).toLocaleDateString('pt-BR')}</p>
                   </div>
                   <div className="solicitacao-actions">
                     <button className="btn-approve" onClick={() => handleAprovar(solic.id)}>Aprovar</button>
