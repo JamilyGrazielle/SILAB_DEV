@@ -89,7 +89,8 @@ export default function Laboratorios() {
         setEquipInput({ nome: '', quantidade: '' });
         fetchLaboratorios(); 
       } catch (error) {
-        setErro('Erro ao adicionar equipamento.');
+        const msg = error.response?.data?.message || error.response?.data;
+        setErro(typeof msg === 'string' ? msg : 'Erro ao adicionar equipamento.')
       }
     }
   };
@@ -105,7 +106,8 @@ export default function Laboratorios() {
         setFormData({ ...formData, equipamentos: novosEquips });
         fetchLaboratorios();
       } catch (error) {
-        setErro('Erro ao remover equipamento.');
+        const msg = error.response?.data?.message || error.response?.data;
+        setErro(typeof msg === 'string' ? msg : 'Erro ao remover equipamento.');
       }
     }
   };
@@ -138,7 +140,8 @@ export default function Laboratorios() {
       fetchLaboratorios(); 
     } catch (error) {
       if (error.response && error.response.data) {
-        setErro(error.response.data.message || error.response.data);
+        const msg = error.response.data.message || error.response.data;
+        setErro(typeof msg === 'string' ? msg : 'Erro ao salvar laboratório.');
       } else {
         setErro('Erro ao salvar laboratório.');
       }

@@ -20,7 +20,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     List<Reserva> findByProfessorAndStatus(Usuario professor, StatusReserva status);
 
-    List<Reserva> findByLaboratorioIdAndDataBetweenAndStatus(Long laboratorioId, LocalDate inicio, LocalDate fim, StatusReserva status);
+    List<Reserva> findByLaboratorioIdAndDataBetweenAndStatusIn(Long laboratorioId, LocalDate inicio, LocalDate fim, List<StatusReserva> status);
 
     boolean existsByLaboratorioIdAndStatus(Long laboratorioId, StatusReserva status);
 

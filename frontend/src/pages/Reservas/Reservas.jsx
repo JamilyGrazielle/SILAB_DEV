@@ -7,6 +7,7 @@ export default function Reservas() {
   const [laboratorios, setLaboratorios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [perfil, setPerfil] = useState('');
+  const [horariosSelected, setHorariosSelected] = useState([]);
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -21,6 +22,24 @@ export default function Reservas() {
     recorrente: false,
     dataFimRecorrencia: ''
   });
+
+  const horarios = [
+    { inicio: '08:00', fim: '08:49' },
+    { inicio: '08:50', fim: '09:39' },
+    { inicio: '10:00', fim: '10:49' },
+    { inicio: '10:50', fim: '11:39' },
+    { inicio: '11:40', fim: '12:30' },
+    { inicio: '14:00', fim: '14:49' },
+    { inicio: '14:50', fim: '15:39' },
+    { inicio: '15:55', fim: '16:44' },
+    { inicio: '16:45', fim: '17:34' },
+    { inicio: '17:35', fim: '18:25' },
+    { inicio: '18:30', fim: '19:19' },
+    { inicio: '19:20', fim: '20:09' },
+    { inicio: '20:10', fim: '20:59' },
+    { inicio: '21:00', fim: '21:49' },
+    { inicio: '21:50', fim: '22:40' },
+  ];
 
   // Identifica o perfil e busca as reservas apropriadas
   const fetchReservas = async (userRole) => {
@@ -67,6 +86,7 @@ export default function Reservas() {
       recorrente: false,
       dataFimRecorrencia: ''
     });
+    setHorariosSelected([]);
     setErro('');
     setIsModalOpen(true);
   };
@@ -79,9 +99,22 @@ export default function Reservas() {
     });
   };
 
+  const toggleHorario = (h) => {
+    setHorariosSelected(prev =>
+      prev.find(x => x.inicio === h.inicio)
+        ? prev.filter(x => x.inicio !== h.inicio)
+        : [...prev, h]
+    );
+  };
+
   const handleSalvar = async (e) => {
     e.preventDefault();
     if (isSaving) return;
+
+    if (horariosSelected.length === 0) {
+      setErro('Selecione pelo menos um horário.');
+      return;
+    }
 
     if (formData.recorrente && !formData.dataFimRecorrencia) {
       setErro('Informe a data final para a repetição.');
@@ -92,27 +125,35 @@ export default function Reservas() {
     setErro('');
 
     try {
-      // Converte horários para o formato HH:mm exigido pelo LocalTime se necessário
-      // O input time do html já manda HH:mm (ex: "08:30")
-      const payload = {
-        laboratorioId: Number(formData.laboratorioId),
-        data: formData.data,
-        horaInicio: formData.horaInicio,
-        horaFim: formData.horaFim,
-        motivo: formData.motivo,
-        recorrente: formData.recorrente,
-        dataFimRecorrencia: formData.recorrente ? formData.dataFimRecorrencia : null
-      };
-
-      await api.post('/reservas', payload);
-      setIsModalOpen(false);
-      fetchReservas(perfil);
-    } catch (error) {
-      if (error.response && error.response.data) {
-        setErro(error.response.data.message || 'Erro ao criar reserva. Verifique horários e conflitos.');
-      } else {
-        setErro('Erro ao se comunicar com o servidor.');
+      let erros = [];
+      for (const h of horariosSelected) {
+        try {
+          await api.post('/reservas', {
+            laboratorioId: Number(formData.laboratorioId),
+            data: formData.data,
+            horaInicio: h.inicio,
+            horaFim: h.fim,
+            motivo: formData.motivo,
+            recorrente: formData.recorrente,
+            dataFimRecorrencia: formData.recorrente ? formData.dataFimRecorrencia : null
+          });
+        } catch (error) {
+          erros.push(`${h.inicio} - ${h.fim}`);
+        }
       }
+
+      if (erros.length > 0 && erros.length === horariosSelected.length) {
+        setErro('Nenhuma reserva foi criada. Todos os horários selecionados já estão ocupados.');
+      } else {
+        setIsModalOpen(false);
+        fetchReservas(perfil);
+        if (erros.length > 0) {
+          alert(`Algumas reservas foram criadas! Porém os seguintes horários já estavam ocupados e foram ignorados:\n${erros.join('\n')}`);
+        } 
+      }
+
+    } catch (error) {
+      setErro('Erro ao se comunicar com o servidor.');
     } finally {
       setIsSaving(false);
     }
@@ -224,14 +265,19 @@ export default function Reservas() {
                   <input type="date" name="data" value={formData.data} onChange={handleChange} required min={new Date().toISOString().split('T')[0]} />
                 </div>
 
-                <div className="row-group">
-                  <div className="input-group half">
-                    <label>Hora Início</label>
-                    <input type="time" name="horaInicio" value={formData.horaInicio} onChange={handleChange} required />
-                  </div>
-                  <div className="input-group half">
-                    <label>Hora Fim</label>
-                    <input type="time" name="horaFim" value={formData.horaFim} onChange={handleChange} required />
+                <div className="input-group">
+                  <label>Horários <span className="horario-hint">Selecione um ou mais</span></label>
+                  <div className="horarios-grid">
+                    {horarios.map(h => (
+                      <button
+                        key={h.inicio}
+                        type="button"
+                        className={`horario-btn ${horariosSelected.find(x => x.inicio === h.inicio) ? 'selected' : ''}`}
+                        onClick={() => toggleHorario(h)}
+                      >
+                        {h.inicio} - {h.fim}
+                      </button>
+                    ))}
                   </div>
                 </div>
 

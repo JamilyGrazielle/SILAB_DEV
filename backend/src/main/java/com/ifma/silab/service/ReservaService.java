@@ -108,21 +108,19 @@ public class ReservaService {
 
         while (!dataAtual.isAfter(dto.getDataFimRecorrencia())) {
 
-            boolean conflito = reservaRepository.existsConflito(dto.getLaboratorioId(), dto.getData(), dto.getHoraInicio(), dto.getHoraFim());
+            boolean conflito = reservaRepository.existsConflito(dto.getLaboratorioId(), dataAtual, dto.getHoraInicio(), dto.getHoraFim());
 
-            if (conflito) {
-                continue;
+            if (!conflito) {
+                Reserva reserva = new Reserva();
+                reserva.setProfessor(professor);
+                reserva.setLaboratorio(laboratorio);
+                reserva.setData(dataAtual);
+                reserva.setHoraInicio(dto.getHoraInicio());
+                reserva.setHoraFim(dto.getHoraFim());
+                reserva.setMotivo(dto.getMotivo());
+                reserva.setStatus(StatusReserva.CONFIRMADA);
+                reservas.add(reserva);
             }
-
-            Reserva reserva = new Reserva();
-            reserva.setProfessor(professor);
-            reserva.setLaboratorio(laboratorio);
-            reserva.setData(dataAtual);
-            reserva.setHoraInicio(dto.getHoraInicio());
-            reserva.setHoraFim(dto.getHoraFim());
-            reserva.setMotivo(dto.getMotivo());
-            reserva.setStatus(StatusReserva.CONFIRMADA);
-            reservas.add(reserva);
 
             dataAtual = dataAtual.plusDays(7);
         }
@@ -155,7 +153,7 @@ public class ReservaService {
     public AgendaResponseDTO consultarAgenda(Long laboratorioId, LocalDate semana) {
         LocalDate fimSemana = semana.plusDays(6);
 
-        List<Reserva> reservas = reservaRepository.findByLaboratorioIdAndDataBetweenAndStatus(laboratorioId, semana, fimSemana, StatusReserva.CONFIRMADA);
+        List<Reserva> reservas = reservaRepository.findByLaboratorioIdAndDataBetweenAndStatusIn(laboratorioId, semana, fimSemana, List.of(StatusReserva.CONFIRMADA, StatusReserva.CONCLUIDA));
 
         List<ReservaAgendaDTO> reservasAgenda = reservas.stream()
                 .map(r -> new ReservaAgendaDTO(
