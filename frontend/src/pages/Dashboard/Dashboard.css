@@ -84,6 +84,7 @@
 .card-icon.labs { background: #e0e7ff; color: #4f46e5; }
 .card-icon.users { background: #ffedd5; color: #d97706; }
 .card-icon.manutencao { background: #ffedd5; color: #ffbe0b; }
+.card-icon.agenda { background: #ffd5d5; color: hsl(0, 75%, 50%);}
 
 .dash-card h3 {
   font-size: 1.3rem;
@@ -135,6 +136,12 @@
   background: #ffbe0b; 
   color: white;
   border-color: #ffbe0b;
+}
+
+.card-btn.red:hover {
+  background: #df2020; 
+  color: white;
+  border-color: #df2020;
 }
 
 

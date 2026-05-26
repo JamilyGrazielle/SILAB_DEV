@@ -1,11 +1,23 @@
 // src/components/Layout/Layout.jsx
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import logoSilab from '../../assets/logo-silab.svg';
 import './Layout.css';
 
 export default function Layout() {
   const navigate = useNavigate();
+  const [autenticado, setAutenticado] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('silab_token');
+    if (!token) {
+      navigate('/');
+    } else {
+      setAutenticado(true);
+    }
+  }, [navigate]);
+
   
   // Resgata os dados do usuário logado
   const userName = localStorage.getItem('silab_user') || 'Usuário';
@@ -21,6 +33,8 @@ export default function Layout() {
     localStorage.removeItem('silab_perfil');
     navigate('/');
   };
+
+  if (!autenticado) return null;
 
   return (
     <div className="layout-wrapper">

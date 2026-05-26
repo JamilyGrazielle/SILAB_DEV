@@ -30,7 +30,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/api/login").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/api/cadastro").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/api/agenda").permitAll();
+
+                    req.requestMatchers(HttpMethod.GET, "/api/agenda").hasAnyRole("ADMIN", "ROOT", "PROFESSOR");;
 
                     req.requestMatchers(HttpMethod.PATCH, "/api/usuarios/*/status").hasAnyRole("ADMIN", "ROOT");
                     req.requestMatchers(HttpMethod.GET, "/api/usuarios").hasAnyRole("ADMIN", "ROOT");

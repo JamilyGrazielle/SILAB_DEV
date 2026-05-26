@@ -8,6 +8,7 @@ import Manutencoes from './pages/Manutencoes/Manutencoes';
 import Layout from './components/Layout/Layout';
 import Reservas from './pages/Reservas/Reservas';
 import Usuarios from './pages/Usuarios/Usuarios';
+import Agenda from './pages/Agenda/Agenda';
 
 export default function App() {
   return (
@@ -20,6 +21,9 @@ export default function App() {
         {/* Rotas Protegidas - Envolvidas pelo Layout */}
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+
+
+          <Route path="/agenda" element={<Agenda />} />
           
           
           <Route path="/laboratorios" element={<Laboratorios />} />
@@ -29,6 +33,7 @@ export default function App() {
           
           
           <Route path="/reservas" element={<Reservas />} />
+
 
           <Route path="/usuarios" element={<Usuarios />} />
         </Route>

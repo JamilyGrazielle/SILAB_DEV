@@ -153,7 +153,7 @@ public class ReservaService {
     public AgendaResponseDTO consultarAgenda(Long laboratorioId, LocalDate semana) {
         LocalDate fimSemana = semana.plusDays(6);
 
-        List<Reserva> reservas = reservaRepository.findByLaboratorioIdAndDataBetweenAndStatus(laboratorioId, semana, fimSemana, StatusReserva.CONFIRMADA);
+        List<Reserva> reservas = reservaRepository.findByLaboratorioIdAndDataBetweenAndStatusIn(laboratorioId, semana, fimSemana, List.of(StatusReserva.CONFIRMADA, StatusReserva.CONCLUIDA));
 
         List<ReservaAgendaDTO> reservasAgenda = reservas.stream()
                 .map(r -> new ReservaAgendaDTO(

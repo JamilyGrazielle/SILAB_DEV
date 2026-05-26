@@ -19,7 +19,7 @@ public class AgendaController {
     private ReservaService reservaService;
 
     @GetMapping
-    public ResponseEntity<AgendaResponseDTO> consultarAgenda(@RequestParam Long LaboratorioId, @RequestParam LocalDate semana) {
-        return ResponseEntity.ok().body(reservaService.consultarAgenda(LaboratorioId, semana));
+    public ResponseEntity<AgendaResponseDTO> consultarAgenda(@RequestParam Long laboratorioId, @RequestParam LocalDate semana) {
+        return ResponseEntity.ok().body(reservaService.consultarAgenda(laboratorioId, semana));
     }
 }
